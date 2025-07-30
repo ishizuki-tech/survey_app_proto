@@ -1,15 +1,39 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Gradle関連ファイル
+.gradle/
+build/
+
+# ローカル設定 (SDKのパスなど)
 local.properties
+
+# Android Studioの生成ファイル
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+output-metadata.json
+
+# ビルド済みパッケージ
+*.aab
+*.apk
+
+# macOSのシステムファイル
+.DS_Store
+
+# ログファイル
+*.log
+
+# IntelliJ IDEA特有の設定
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# キーストア（Keystore）ファイル
+*.jks
+*.keystore
+
+# Googleサービス設定ファイル
+google-services.json
+
+# プロファイリング用ファイル
+*.hprof
