@@ -1,42 +1,87 @@
 package com.negi.survey.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.unit.dp
-import com.negi.survey.model.*
-import com.negi.survey.R
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.negi.survey.R
+import com.negi.survey.model.*
+
+@Composable
+fun BackButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier.padding(8.dp)
+    ) {
+        Icon(Icons.Default.ArrowBack, contentDescription = null)
+        Spacer(Modifier.width(4.dp))
+        Text(stringResource(R.string.action_back))
+    }
+}
+
+@Composable
+fun NextButton(
+    enabled: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.padding(8.dp)
+    ) {
+        Text(stringResource(R.string.action_next))
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
     spec: QuestionSpec,
-    answer: String,                 // 保存は key（Single/YesNo/Branch/MultiQueue）または自由入力文字列（Free）
+    answer: String,
     onAnswer: (String) -> Unit,
     onBack: () -> Unit,
     onNext: () -> Unit,
-    onBranchToId: (String) -> Unit, // YES/NO と SingleBranch の即時分岐で使用
+    onBranchToId: (String) -> Unit
 ) {
     val canNext = spec.isValid(answer)
 
+    // オーバーレイ（テキスト可読性向上用）
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White.copy(alpha = 0.75f))
+    )
+
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
-            TopAppBar(title = { Text(text = stringResource(id = spec.titleRes)) })
+            TopAppBar(
+                title = { Text(stringResource(spec.titleRes)) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
+                )
+            )
         },
         bottomBar = {
-            BottomAppBar {
-                OutlinedButton(onClick = onBack) { Text(stringResource(R.string.action_back)) }
+            BottomAppBar(containerColor = Color.Transparent) {
+                BackButton(onClick = onBack)
                 Spacer(Modifier.weight(1f))
-                Button(onClick = onNext, enabled = canNext) {
-                    Text(stringResource(R.string.action_next))
-                }
+                NextButton(enabled = canNext, onClick = onNext)
             }
         }
     ) { inner ->
@@ -44,15 +89,10 @@ fun QuestionScreen(
             modifier = Modifier
                 .padding(inner)
                 .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxSize()
         ) {
-            QuestionContent(
-                spec = spec,
-                answer = answer,
-                onAnswer = onAnswer,
-                onBranchToId = onBranchToId
-            )
+
+            QuestionContent(spec, answer, onAnswer, onBranchToId)
 
             if (!canNext && spec.required) {
                 Text(
@@ -79,7 +119,6 @@ fun QuestionContent(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = spec.singleLine,
                 keyboardOptions = KeyboardOptions(keyboardType = spec.keyboardType)
-                // placeholder を使うなら strings.xml に用意して stringResource を参照してください
             )
         }
 
@@ -102,32 +141,134 @@ fun QuestionContent(
                             onClick = { onAnswer(opt.key) }
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(text = stringResource(id = opt.labelRes))
+                        Text(stringResource(opt.labelRes))
                     }
                 }
             }
         }
-
         is YesNoSpec -> {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = {
-                    onAnswer(spec.yesKey)
-                    onBranchToId(spec.nextIdIfYes)  // 即時分岐
-                }) {
+                val selectedKey = answer
+
+                Button(
+                    onClick = { onAnswer(spec.yesKey) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (selectedKey == spec.yesKey)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = if (selectedKey == spec.yesKey)
+                            MaterialTheme.colorScheme.onPrimary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                ) {
                     Text(stringResource(spec.yesLabelRes))
                 }
 
-                OutlinedButton(onClick = {
-                    onAnswer(spec.noKey)
-                    onBranchToId(spec.nextIdIfNo)   // 即時分岐
-                }) {
+                Button(
+                    onClick = { onAnswer(spec.noKey) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (selectedKey == spec.noKey)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = if (selectedKey == spec.noKey)
+                            MaterialTheme.colorScheme.onPrimary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                ) {
                     Text(stringResource(spec.noLabelRes))
                 }
             }
         }
+
+//        is YesNoSpec -> {
+//            Row(
+//                horizontalArrangement = Arrangement.spacedBy(12.dp),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                val selectedKey = answer
+//
+//                Button(
+//                    onClick = {
+//                        onAnswer(spec.yesKey)
+//                        onBranchToId(spec.nextIdIfYes)
+//                    },
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = if (selectedKey == spec.yesKey)
+//                            MaterialTheme.colorScheme.primary
+//                        else
+//                            MaterialTheme.colorScheme.surfaceVariant,
+//                        contentColor = if (selectedKey == spec.yesKey)
+//                            MaterialTheme.colorScheme.onPrimary
+//                        else
+//                            MaterialTheme.colorScheme.onSurfaceVariant
+//                    )
+//                ) {
+//                    Text(stringResource(spec.yesLabelRes))
+//                }
+//
+//                Button(
+//                    onClick = {
+//                        onAnswer(spec.noKey)
+//                        onBranchToId(spec.nextIdIfNo)
+//                    },
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = if (selectedKey == spec.noKey)
+//                            MaterialTheme.colorScheme.primary
+//                        else
+//                            MaterialTheme.colorScheme.surfaceVariant,
+//                        contentColor = if (selectedKey == spec.noKey)
+//                            MaterialTheme.colorScheme.onPrimary
+//                        else
+//                            MaterialTheme.colorScheme.onSurfaceVariant
+//                    )
+//                ) {
+//                    Text(stringResource(spec.noLabelRes))
+//                }
+//            }
+//        }
+//        is YesNoSpec -> {
+//            // 選択状態を answer に保存するだけ
+//            Row(
+//                horizontalArrangement = Arrangement.spacedBy(12.dp),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Button(onClick = { onAnswer(spec.yesKey) }) {
+//                    Text(stringResource(spec.yesLabelRes))
+//                }
+//
+//                OutlinedButton(onClick = { onAnswer(spec.noKey) }) {
+//                    Text(stringResource(spec.noLabelRes))
+//                }
+//            }
+//        }
+
+//        is YesNoSpec -> {
+//            Row(
+//                horizontalArrangement = Arrangement.spacedBy(12.dp),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Button(onClick = {
+//                    onAnswer(spec.yesKey)
+//                    onBranchToId(spec.nextIdIfYes)
+//                }) {
+//                    Text(stringResource(spec.yesLabelRes))
+//                }
+//
+//                OutlinedButton(onClick = {
+//                    onAnswer(spec.noKey)
+//                    onBranchToId(spec.nextIdIfNo)
+//                }) {
+//                    Text(stringResource(spec.noLabelRes))
+//                }
+//            }
+//        }
 
         is SingleBranchSpec -> {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -139,34 +280,54 @@ fun QuestionContent(
                             .fillMaxWidth()
                             .selectable(
                                 selected = selected,
-                                onClick = {
-                                    onAnswer(opt.key)
-                                    spec.nextIdByKey[opt.key]?.let(onBranchToId) // 即時分岐
-                                }
+                                onClick = { onAnswer(opt.key) }
                             )
                             .padding(4.dp)
                     ) {
                         RadioButton(
                             selected = selected,
-                            onClick = {
-                                onAnswer(opt.key)
-                                spec.nextIdByKey[opt.key]?.let(onBranchToId)
-                            }
+                            onClick = { onAnswer(opt.key) }
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(text = stringResource(id = opt.labelRes))
+                        Text(stringResource(opt.labelRes))
                     }
                 }
             }
         }
+//        is SingleBranchSpec -> {
+//            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+//                spec.options.forEach { opt ->
+//                    val selected = answer == opt.key
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .selectable(
+//                                selected = selected,
+//                                onClick = {
+//                                    onAnswer(opt.key)
+//                                    spec.nextIdByKey[opt.key]?.let(onBranchToId)
+//                                }
+//                            )
+//                            .padding(4.dp)
+//                    ) {
+//                        RadioButton(
+//                            selected = selected,
+//                            onClick = {
+//                                onAnswer(opt.key)
+//                                spec.nextIdByKey[opt.key]?.let(onBranchToId)
+//                            }
+//                        )
+//                        Spacer(Modifier.width(8.dp))
+//                        Text(stringResource(opt.labelRes))
+//                    }
+//                }
+//            }
+//        }
 
         is MultiQueueSpec -> {
-            // 簡易実装：複数選択は "a,b,c" のカンマ区切りで保存
             val selected = remember(answer) {
-                answer.split(",")
-                    .map { it.trim() }
-                    .filter { it.isNotEmpty() }
-                    .toMutableSet()
+                answer.split(",").map { it.trim() }.filter { it.isNotEmpty() }.toMutableSet()
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 spec.options.forEach { opt ->
@@ -179,11 +340,10 @@ fun QuestionContent(
                             }
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text(text = stringResource(id = opt.labelRes))
+                        Text(stringResource(opt.labelRes))
                     }
                 }
             }
-            // 分岐は「次へ」で確定（即時遷移は行わない）
         }
     }
 }

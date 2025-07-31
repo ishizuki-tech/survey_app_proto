@@ -1,150 +1,163 @@
-// app/src/main/java/com/negi/survey/ui/SurveyApp.kt
 package com.negi.survey.ui
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.compose.animation.*
+import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable as animComposable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.negi.survey.model.QuestionSpec
-import com.negi.survey.ui.screen.QuestionScreen
-import com.negi.survey.ui.screen.SummaryScreen
-import com.negi.survey.ui.screen.ThankPageScreen
-import com.negi.survey.ui.screen.WelcomePageScreen
+import com.negi.survey.model.SingleBranchSpec
+import com.negi.survey.model.YesNoSpec
+import com.negi.survey.ui.screen.*
 import com.negi.survey.vm.SurveyViewModel
+import android.app.Activity
+import android.content.Intent
 
 sealed class Route(val route: String) {
-    data object Welcome : Route("welcome")          // ← 追加
-    data object Q : Route("q/{id}") {
-        fun path(id: String) = "q/$id"
+    object Welcome : Route("welcome")
+    object Question : Route("question/{id}") {
+        fun path(id: String) = "question/$id"
     }
-    data object Summary : Route("summary")
-    data object Thanks : Route("thanks")
+    object Summary : Route("summary")
+    object Thanks : Route("thanks")
 }
 
+fun restartApp(activity: Activity) {
+    val intent = activity.packageManager.getLaunchIntentForPackage(activity.packageName)
+    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+    activity.finish()
+    activity.startActivity(intent)
+    Runtime.getRuntime().exit(0) // 完全な再起動（※Compose の再描画対策）
+}
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SurveyApp() {
-    val nav = rememberNavController()
-    val vm: SurveyViewModel = viewModel()
+    val viewModel: SurveyViewModel = viewModel()
+    val navController = rememberAnimatedNavController()
 
-    NavHost(
-        navController = nav,
-        startDestination = Route.Welcome.route      // ← 変更: Welcome を開始地点に
+    // 🔁 言語切り替えトリガー
+    var localeKey by remember { mutableStateOf(0) }
+
+    AnimatedNavHost(
+        navController = navController,
+        startDestination = Route.Welcome.route,
+        enterTransition = { slideInHorizontally { it } + fadeIn() },
+        exitTransition = { slideOutHorizontally { it } + fadeOut() }
     ) {
-        // Welcome
-        composable(Route.Welcome.route) {
-            val visited by vm.visited.collectAsState()
-            val canResume = visited.isNotEmpty()
+        // Welcome Screen
+        animComposable(Route.Welcome.route) {
+            val visited by viewModel.visited.collectAsState()
+            val answers by viewModel.answers.collectAsState()
+            val canResume = answers.values.any { it?.toString()?.isNotBlank() == true }
 
-            WelcomePageScreen(
-                canResume = canResume,
-                onStart = {
-                    vm.resetAll()
-                    nav.navigate(Route.Q.path(vm.graph.startId)) {
-                        launchSingleTop = true
-                        popUpTo(Route.Welcome.route) { inclusive = false }
-                    }
-                },
-                onResume = {
-                    // VM のヘルパーを使うパターン
-                    val targetId = vm.getFirstUnanswered()
-                    nav.navigate(Route.Q.path(targetId)) {
-                        launchSingleTop = true
-                        popUpTo(Route.Welcome.route) { inclusive = false }
-                    }
-                }
-            )
+            key(localeKey) {
+                WelcomePageWrapper(
+                    canResume = canResume,
+                    onStart = {
+                        viewModel.resetAll()
+                        navController.navigate(Route.Question.path(viewModel.graph.startId)) {
+                            popUpTo(Route.Welcome.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    },
+                    onResume = {
+                        val targetId = viewModel.getFirstUnanswered()
+                        navController.navigate(Route.Question.path(targetId)) {
+                            popUpTo(Route.Welcome.route) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    },
+                    onLocaleChanged = { localeKey++ }
+                )
+            }
         }
 
-        // 質問ページ
-        composable(
-            route = Route.Q.route,
+        // Question Screen
+        animComposable(
+            Route.Question.route,
             arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) { entry ->
-            val qid = entry.arguments!!.getString("id")!!
-            vm.markVisited(qid)
+        ) { backStackEntry ->
+            val questionId = backStackEntry.arguments?.getString("id") ?: return@animComposable
+            viewModel.markVisited(questionId)
 
-            val visited by vm.visited.collectAsState()   // ← 訪問履歴を監視
-            val answers by vm.answers.collectAsState()
-            val spec: QuestionSpec = requireNotNull(vm.graph.questions[qid])
-            val answer = answers[qid] ?: ""
-
-            val goto: (String?) -> Unit = { nextId ->
-                if (nextId != null) {
-                    nav.navigate(Route.Q.path(nextId)) { launchSingleTop = true }
-                } else {
-                    nav.navigate(Route.Summary.route) { launchSingleTop = true }
-                }
-            }
-
-            val onNext: () -> Unit = {
-                if (spec.isValid(answer)) {
-                    goto(vm.decideNext(qid))
-                }
-            }
-
-            val onImmediateBranch: (String) -> Unit = { nextId -> goto(nextId) }
-
-            // ★ ここを変更 ★
-            // visited の中から自分の index を探し、一つ前の qid を取得
-            val currentIndex = visited.indexOf(qid)
-            val prevId = visited.getOrNull(currentIndex - 1)  // index 0 の場合は null
-
-            val onBack: () -> Unit = {
-                if (prevId != null) {
-                    // 一つ前の質問へ戻る。バックスタックに重複を残さないため popUpTo。
-                    nav.navigate(Route.Q.path(prevId)) {
-                        launchSingleTop = true
-                        popUpTo(Route.Q.path(prevId)) { inclusive = false }
-                    }
-                } else {
-                    // それ以前がないなら Welcome に戻す or finish()
-                    nav.navigate(Route.Welcome.route) {
-                        launchSingleTop = true
-                        popUpTo(Route.Welcome.route) { inclusive = false }
-                    }
-                }
-            }
+            val visited by viewModel.visited.collectAsState()
+            val answers by viewModel.answers.collectAsState()
+            val spec: QuestionSpec = viewModel.graph.questions[questionId] ?: return@animComposable
+            val answer = answers[questionId] ?: ""
 
             QuestionScreen(
                 spec = spec,
                 answer = answer,
-                onAnswer = { vm.setAnswer(qid, it) },
-                onBack = onBack,
-                onNext = onNext,
-                onBranchToId = onImmediateBranch
-            )
-        }
-
-        // サマリー
-        composable(Route.Summary.route) {
-            SummaryScreen(
-                vm = vm,
-                onFinish = {
-                    // 送信処理（API/DB）を済ませたらサンクスへ
-                    nav.navigate(Route.Thanks.route) {
+                onAnswer = { viewModel.setAnswer(questionId, it) },
+                onBack = {
+                    val previousId = visited.getOrNull(visited.indexOf(questionId) - 1)
+                    navController.navigate(previousId?.let { Route.Question.path(it) } ?: Route.Welcome.route) {
+                        popUpTo(previousId?.let { Route.Question.path(it) } ?: Route.Welcome.route) { inclusive = false }
                         launchSingleTop = true
-                        popUpTo(nav.graph.id) { inclusive = false }
+                    }
+                },
+                onNext = {
+                    if (spec.isValid(answer)) {
+                        val nextId = when (spec) {
+                            is YesNoSpec -> when (answer) {
+                                spec.yesKey -> spec.nextIdIfYes
+                                spec.noKey -> spec.nextIdIfNo
+                                else -> null
+                            }
+                            is SingleBranchSpec -> spec.nextIdByKey[answer]
+                            else -> viewModel.decideNext(questionId)
+                        }
+
+                        navController.navigate(nextId?.let { Route.Question.path(it) } ?: Route.Summary.route) {
+                            launchSingleTop = true
+                        }
+                    }
+                },
+                onBranchToId = { branchId ->
+                    navController.navigate(Route.Question.path(branchId)) {
+                        launchSingleTop = true
                     }
                 }
             )
         }
 
-        // サンクス
-        composable(Route.Thanks.route) {
-            ThankPageScreen(
-                onRestart = {
-                    // Welcome に戻してやり直し
-                    nav.navigate(Route.Welcome.route) {
-                        launchSingleTop = true
-                        popUpTo(nav.graph.id) { inclusive = true }
+        // Summary Screen
+        animComposable(Route.Summary.route) {
+            SummaryScreen(
+                vm = viewModel,
+                onBack = {
+                    val lastVisited = viewModel.visited.value.lastOrNull()
+                    if (lastVisited != null) {
+                        navController.navigate(Route.Question.path(lastVisited)) {
+                            launchSingleTop = true
+                        }
+                    } else {
+                        navController.popBackStack()
                     }
                 },
-                onClose = { /* Activity.finish() は ThankPageScreen 内で実行 */ }
+                onFinish = {
+                    navController.navigate(Route.Thanks.route) {
+                        popUpTo(Route.Welcome.route) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        // Thank You Screen
+        animComposable(Route.Thanks.route) {
+            ThankPageScreen(
+                onRestart = {
+                    navController.navigate(Route.Welcome.route) {
+                        popUpTo(Route.Welcome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onClose = { /* Activity.finish() handled externally */ }
             )
         }
     }

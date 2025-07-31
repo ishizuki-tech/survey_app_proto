@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">アンケート</string>
+
+    <!-- Welcome -->
+    <string name="title_welcome">ようこそ</string>
+    <string name="msg_welcome">アンケートへようこそ。</string>
+    <string name="msg_welcome_sub">「開始」をタップして、アンケートを始めるか再開してください。</string>
+    <string name="action_start">開始</string>
+    <string name="action_start_over">最初から</string>
+    <string name="action_resume">再開</string>
+    <string name="action_language">言語</string>
+
+    <!-- Language labels -->
+    <string name="lang_en">英語</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_sw">スワヒリ語</string>
+
+    <!-- Common -->
+    <string name="action_back">戻る</string>
+    <string name="action_next">次へ</string>
+    <string name="action_submit">送信</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="msg_required">この質問は必須です。</string>
+    <string name="answer_empty">（未回答）</string>
+
+    <!-- Questions -->
+    <string name="q_start_title">あなたは農業に従事していますか？</string>
+    <string name="q_crop_title">主に栽培している作物は何ですか？</string>
+    <string name="q_maize_area">トウモロコシの栽培面積（ヘクタール）</string>
+    <string name="q_maize_variety">使用している品種名</string>
+    <string name="q_rice_area">米の栽培面積（ヘクタール）</string>
+    <string name="q_rice_irrigation">灌漑していますか？（はい／いいえ）</string>
+    <string name="q_wheat_area">小麦の栽培面積（ヘクタール）</string>
+    <string name="q_other_crop">その他の作物名を入力してください</string>
+    <string name="q_secondary_title">副作物をすべて選択してください</string>
+    <string name="q_legume_area">豆類の栽培面積（ヘクタール）</string>
+    <string name="q_veg_area">野菜の栽培面積（ヘクタール）</string>
+    <string name="q_fruit_count">果樹の本数</string>
+    <string name="q_job_title">現在の主な職業は何ですか？</string>
+    <string name="q_country_title">お住まいの国はどこですか？</string>
+
+    <!-- Options -->
+    <string name="opt_maize">トウモロコシ</string>
+    <string name="opt_rice">米</string>
+    <string name="opt_wheat">小麦</string>
+    <string name="opt_other">その他</string>
+    <string name="opt_legume">豆類</string>
+    <string name="opt_veg">野菜</string>
+    <string name="opt_fruit">果樹</string>
+
+    <!-- Thanks page -->
+    <string name="title_thanks">ありがとうございます！</string>
+    <string name="msg_thanks">ご回答を送信しました。</string>
+    <string name="msg_thanks_sub">ご協力に感謝します。</string>
+    <string name="action_restart">やり直す</string>
+    <string name="action_close">閉じる</string>
+
+    <!-- Summary Screen -->
+    <string name="title_summary">回答内容の確認</string>
+</resources>

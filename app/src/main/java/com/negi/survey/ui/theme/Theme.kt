@@ -10,6 +10,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -53,6 +55,23 @@ fun SurveyTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        content = content
+    )
+}
+
+private val ColorScheme = lightColorScheme(
+    background = Color.Transparent, // 🔥 背景は透明に
+    surface = Color.White.copy(alpha = 0.85f),
+    primary = Color(0xFF2E7D32),
+    onPrimary = Color.White,
+    onBackground = Color.Black
+)
+
+@Composable
+fun AppTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = ColorScheme,
+        typography = Typography(),
         content = content
     )
 }

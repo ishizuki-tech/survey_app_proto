@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Utafiti</string>
+
+    <!-- Welcome -->
+    <string name="title_welcome">Karibu</string>
+    <string name="msg_welcome">Karibu kwenye utafiti.</string>
+    <string name="msg_welcome_sub">Gusa “Anza” kuanza au kuendelea na utafiti.</string>
+    <string name="action_start">Anza</string>
+    <string name="action_start_over">Anza Tena</string>
+    <string name="action_resume">Endelea</string>
+    <string name="action_language">Lugha</string>
+
+    <!-- Language labels -->
+    <string name="lang_en">Kiingereza</string>
+    <string name="lang_ja">Kijapani</string>
+    <string name="lang_sw">Kiswahili</string>
+
+    <!-- Common -->
+    <string name="action_back">Rudi</string>
+    <string name="action_next">Ifuatayo</string>
+    <string name="action_submit">Tuma</string>
+    <string name="yes">Ndiyo</string>
+    <string name="no">Hapana</string>
+    <string name="msg_required">Swali hili linahitajika.</string>
+    <string name="answer_empty">(Hakuna jibu)</string>
+
+    <!-- Questions -->
+    <string name="q_start_title">Je, unajihusisha na kilimo?</string>
+    <string name="q_crop_title">Zao lako kuu ni lipi?</string>
+    <string name="q_maize_area">Eneo la mahindi (hektari)</string>
+    <string name="q_maize_variety">Jina la aina unayotumia</string>
+    <string name="q_rice_area">Eneo la mpunga (hektari)</string>
+    <string name="q_rice_irrigation">Umwagiliaji (Ndiyo / Hapana)</string>
+    <string name="q_wheat_area">Eneo la ngano (hektari)</string>
+    <string name="q_other_crop">Tafadhali andika jina la zao lingine</string>
+    <string name="q_secondary_title">Chagua mazao ya pili yote</string>
+    <string name="q_legume_area">Eneo la kunde (hektari)</string>
+    <string name="q_veg_area">Eneo la mboga (hektari)</string>
+    <string name="q_fruit_count">Idadi ya miti ya matunda</string>
+    <string name="q_job_title">Kazi yako kuu kwa sasa ni ipi?</string>
+    <string name="q_country_title">Unaishi nchi gani?</string>
+
+    <!-- Options -->
+    <string name="opt_maize">Mahindi</string>
+    <string name="opt_rice">Mpunga</string>
+    <string name="opt_wheat">Ngano</string>
+    <string name="opt_other">Nyingine</string>
+    <string name="opt_legume">Kunde</string>
+    <string name="opt_veg">Mboga</string>
+    <string name="opt_fruit">Miti ya matunda</string>
+
+    <!-- Thanks page -->
+    <string name="title_thanks">Asante sana!</string>
+    <string name="msg_thanks">Majibu yako yamewasilishwa.</string>
+    <string name="msg_thanks_sub">Tunashukuru kwa muda wako.</string>
+    <string name="action_restart">Anza Tena</string>
+    <string name="action_close">Funga</string>
+
+    <!-- Summary Screen -->
+    <string name="title_summary">Kagua Majibu Yako</string>
+</resources>
