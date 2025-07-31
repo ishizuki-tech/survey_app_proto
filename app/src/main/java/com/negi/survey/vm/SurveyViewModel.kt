@@ -9,7 +9,10 @@ import com.negi.survey.model.SingleBranchSpec
 import com.negi.survey.model.SingleSpec
 import com.negi.survey.model.SurveyGraph
 import com.negi.survey.model.YesNoSpec
+import com.negi.survey.model.buildCameraTestGraph
 import com.negi.survey.model.buildGraph
+import com.negi.survey.model.buildVideoTestGraph
+import com.negi.survey.model.buildVoiceTestGraph
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,8 +33,10 @@ class SurveyViewModel(
 ) : ViewModel() {
 
     /** 質問グラフ（必要に応じて buildGraph() を差し替え） */
-    val graph: SurveyGraph = buildGraph()
-
+    //    val graph: SurveyGraph = buildGraph()
+    //    val graph: SurveyGraph = buildVoiceTestGraph()
+    //    val graph: SurveyGraph = buildVoiceTestGraph()
+    val graph: SurveyGraph = buildCameraTestGraph()
     // ---- 永続化キー ----
     private val keyAnswers = "answers"
     private val keyQueue = "queue"

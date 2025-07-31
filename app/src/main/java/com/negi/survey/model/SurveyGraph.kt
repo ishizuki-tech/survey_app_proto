@@ -8,6 +8,96 @@ data class SurveyGraph(
     val questions: Map<String, QuestionSpec>
 )
 
+fun buildCameraTestGraph(): SurveyGraph {
+    val nodes: List<QuestionSpec> = listOf(
+        CameraSpec(
+            id = "q_photo_reason",
+            titleRes = R.string.q_photo_reason_title, // 例: 「作物を選んだ理由を写真で撮ってください」
+            required = false,
+            maxImages = 1,
+            nextId = "q_photo_family"
+        ),
+        CameraSpec(
+            id = "q_photo_family",
+            titleRes = R.string.q_photo_family_title, // 例: 「ご家族の写真を撮ってください」
+            required = false,
+            maxImages = 1,
+            nextId = "q_photo_local"
+        ),
+        CameraSpec(
+            id = "q_photo_local",
+            titleRes = R.string.q_photo_local_title, // 例: 「今の現地の状況を写真で撮ってください」
+            required = false,
+            maxImages = 1,
+            nextId = null // 最後なのでnull
+        )
+    )
+    return SurveyGraph(
+        startId = "q_photo_reason",
+        questions = nodes.associateBy { it.id }
+    )
+}
+
+fun buildVideoTestGraph(): SurveyGraph {
+    val nodes: List<QuestionSpec> = listOf(
+        VideoSpec(
+            id = "q_video_reason",
+            titleRes = R.string.q_video_reason_title, // 例: 「作物を選んだ理由を動画で話してください」
+            required = false,
+            maxDurationSec = 30,
+            nextId = "q_video_family"
+        ),
+        VideoSpec(
+            id = "q_video_family",
+            titleRes = R.string.q_video_family_title, // 例: 「ご家族の紹介を動画で話してください」
+            required = false,
+            maxDurationSec = 20,
+            nextId = "q_video_local"
+        ),
+        VideoSpec(
+            id = "q_video_local",
+            titleRes = R.string.q_video_local_title, // 例: 「今の現地の状況について動画で話してください」
+            required = false,
+            maxDurationSec = 25,
+            nextId = null // 最後なのでnull
+        )
+    )
+    return SurveyGraph(
+        startId = "q_video_reason",
+        questions = nodes.associateBy { it.id }
+    )
+}
+
+fun buildVoiceTestGraph(): SurveyGraph {
+    val nodes: List<QuestionSpec> = listOf(
+        VoiceSpec(
+            id = "q_voice_reason",
+            titleRes = R.string.q_voice_reason_title, // 例: 「作物を選んだ理由を音声で話してください」
+            required = false,
+            maxDurationSec = 30,
+            nextId = "q_voice_family"
+        ),
+        VoiceSpec(
+            id = "q_voice_family",
+            titleRes = R.string.q_voice_family_title, // 例: 「ご家族の紹介を音声で話してください」
+            required = false,
+            maxDurationSec = 20,
+            nextId = "q_voice_local"
+        ),
+        VoiceSpec(
+            id = "q_voice_local",
+            titleRes = R.string.q_voice_local_title, // 例: 「今の現地の状況について音声で話してください」
+            required = false,
+            maxDurationSec = 25,
+            nextId = null // 最後なのでnull
+        )
+    )
+    return SurveyGraph(
+        startId = "q_voice_reason",
+        questions = nodes.associateBy { it.id }
+    )
+}
+
 fun buildGraph(): SurveyGraph {
     val maize = Option("maize", R.string.opt_maize)
     val rice  = Option("rice",  R.string.opt_rice)
@@ -43,12 +133,12 @@ fun buildGraph(): SurveyGraph {
             id = "flow_maize_1",
             titleRes = R.string.q_maize_area,
             keyboardType = KeyboardType.Number,
-            nextId = "flow_maize_2"
+            nextId = "q_voice_reason"
         ),
         FreeSpec(
             id = "flow_maize_2",
             titleRes = R.string.q_maize_variety,
-            nextId = "q_secondary"
+            nextId = "q_voice_reason"
         ),
         // --- Rice flow ---
         FreeSpec(
@@ -112,8 +202,14 @@ fun buildGraph(): SurveyGraph {
         FreeSpec(
             id = "q_country",
             titleRes = R.string.q_country_title
-        )
-    )
+        ),
+        VoiceSpec(
+            id = "q_voice_reason",
+            titleRes = R.string.q_voice_reason_title, // リソース例: "作物を選んだ理由を音声でお話しください"
+            required = false,
+            maxDurationSec = 30,
+            nextId = "q_secondary"
+        ),)
     return SurveyGraph(
         startId = "q_start",
         questions = nodes.associateBy { it.id }

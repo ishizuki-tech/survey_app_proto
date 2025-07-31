@@ -83,3 +83,38 @@ data class MultiQueueSpec(
     override fun isValid(answer: String?): Boolean =
         if (!required) true else !answer.isNullOrBlank()
 }
+
+/** 音声録音回答 */
+data class VoiceSpec(
+    override val id: String,
+    @StringRes override val titleRes: Int,
+    override val required: Boolean = true,
+    val maxDurationSec: Int = 60,
+    override val nextId: String? = null
+) : QuestionSpec {
+    override fun isValid(answer: String?): Boolean =
+        if (!required) true else !answer.isNullOrBlank()
+}
+
+/** 動画録画回答 */
+data class VideoSpec(
+    override val id: String,
+    @StringRes override val titleRes: Int,
+    override val required: Boolean = true,
+    val maxDurationSec: Int = 60,
+    override val nextId: String? = null
+) : QuestionSpec {
+    override fun isValid(answer: String?): Boolean =
+        if (!required) true else !answer.isNullOrBlank()
+}
+
+data class CameraSpec(
+    override val id: String,
+    @StringRes override val titleRes: Int,
+    override val required: Boolean = true,
+    val maxImages: Int = 1,                  // 複数枚対応する場合
+    override val nextId: String? = null
+) : QuestionSpec {
+    override fun isValid(answer: String?): Boolean =
+        if (!required) true else !answer.isNullOrBlank() // answer: 画像ファイルパスやcontent://Uri
+}

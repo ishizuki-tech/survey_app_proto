@@ -40,6 +40,18 @@
     <string name="q_job_title">What is your current main job?</string>
     <string name="q_country_title">Which country do you live in?</string>
 
+    <string name="q_voice_reason_title" translatable="false"> VOICE RECORDING 1</string>
+    <string name="q_voice_family_title" translatable="false"> VOICE RECORDING 2</string>
+    <string name="q_voice_local_title" translatable="false"> VOICE RECORDING 3</string>
+
+    <string name="q_video_reason_title" translatable="false"> VIDEO RECORDING 1</string>
+    <string name="q_video_family_title" translatable="false"> VIDEO RECORDING 2</string>
+    <string name="q_video_local_title" translatable="false"> VIDEO RECORDING 3</string>
+
+    <string name="q_photo_reason_title" translatable="false"> CAMERA SHOT 1</string>
+    <string name="q_photo_family_title" translatable="false"> CAMERA SHOT 2</string>
+    <string name="q_photo_local_title" translatable="false"> CAMERA SHOT 3</string>
+
     <!-- Options -->
     <string name="opt_maize">Maize</string>
     <string name="opt_rice">Rice</string>

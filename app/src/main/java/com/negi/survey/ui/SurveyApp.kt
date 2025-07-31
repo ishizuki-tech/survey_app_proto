@@ -17,6 +17,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import androidx.compose.ui.res.painterResource
+import com.negi.survey.R
 
 sealed class Route(val route: String) {
     object Welcome : Route("welcome")
@@ -90,12 +92,30 @@ fun SurveyApp() {
             val spec: QuestionSpec = viewModel.graph.questions[questionId] ?: return@animComposable
             val answer = answers[questionId] ?: ""
 
+            // 次の質問の取得
+            val nextId = viewModel.decideNext(questionId)
+            val nextSpec = nextId?.let { viewModel.graph.questions[it] }
+            val nextAnswer = nextId?.let { answers[it] ?: "" }
+
+            // 前の質問の取得
+            val currentIndex = visited.indexOf(questionId)
+            val backId = if (currentIndex > 0) visited[currentIndex - 1] else null
+            val backSpec = backId?.let { viewModel.graph.questions[it] }
+            val backAnswer = backId?.let { answers[it] ?: "" }
+
+            val bgPainter = painterResource(id = R.drawable.welcome_bg) // ← あなたの背景画像
+
             QuestionScreen(
+                backgroundPainter = bgPainter,
                 spec = spec,
                 answer = answer,
+                nextSpec = nextSpec,
+                nextAnswer = nextAnswer,
+                backSpec = backSpec,
+                backAnswer = backAnswer,
                 onAnswer = { viewModel.setAnswer(questionId, it) },
                 onBack = {
-                    val previousId = visited.getOrNull(visited.indexOf(questionId) - 1)
+                    val previousId = visited.getOrNull(currentIndex - 1)
                     navController.navigate(previousId?.let { Route.Question.path(it) } ?: Route.Welcome.route) {
                         popUpTo(previousId?.let { Route.Question.path(it) } ?: Route.Welcome.route) { inclusive = false }
                         launchSingleTop = true
@@ -103,16 +123,6 @@ fun SurveyApp() {
                 },
                 onNext = {
                     if (spec.isValid(answer)) {
-                        val nextId = when (spec) {
-                            is YesNoSpec -> when (answer) {
-                                spec.yesKey -> spec.nextIdIfYes
-                                spec.noKey -> spec.nextIdIfNo
-                                else -> null
-                            }
-                            is SingleBranchSpec -> spec.nextIdByKey[answer]
-                            else -> viewModel.decideNext(questionId)
-                        }
-
                         navController.navigate(nextId?.let { Route.Question.path(it) } ?: Route.Summary.route) {
                             launchSingleTop = true
                         }
