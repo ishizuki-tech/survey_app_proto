@@ -4,6 +4,8 @@ package com.negi.survey
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -13,10 +15,10 @@ import androidx.compose.ui.res.painterResource
 import com.negi.survey.ui.SurveyApp
 import com.negi.survey.ui.theme.AppTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        AppCompatDelegate.setApplicationLocales(AppCompatDelegate.getApplicationLocales())
         setContent {
             AppTheme {
                 SurveyAppWithBackground()

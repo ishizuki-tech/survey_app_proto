@@ -15,6 +15,8 @@ import com.negi.survey.ui.screen.*
 import com.negi.survey.vm.SurveyViewModel
 import android.app.Activity
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 
 sealed class Route(val route: String) {
     object Welcome : Route("welcome")
@@ -30,7 +32,6 @@ fun restartApp(activity: Activity) {
     intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
     activity.finish()
     activity.startActivity(intent)
-    Runtime.getRuntime().exit(0) // 完全な再起動（※Compose の再描画対策）
 }
 
 @OptIn(ExperimentalAnimationApi::class)
