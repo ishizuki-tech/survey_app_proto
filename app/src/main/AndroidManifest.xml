@@ -2,29 +2,77 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- ────────────────────────────────────────────────
+         1) 権限定義
+         ──────────────────────────────────────────────── -->
+
+    <!-- 音声録音 (VoiceSpec) 用 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- カメラ・動画キャプチャを独自 API で使う場合のみ必要
+         “標準カメラアプリへの Intent” だけなら不要 -->
+    <!--
+    <uses-permission android:name="android.permission.CAMERA"/>
+    -->
+
+    <!-- Android 13+ : 画像・動画・音声ファイルを読み取るための新権限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:targetApi="33" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"  tools:targetApi="33" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"  tools:targetApi="33" />
+
+    <!-- Android 12 以下 : 従来のストレージ読み取り権限 (maxSdkVersion=32 で限定) -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- WRITE_EXTERNAL_STORAGE は API29 から非推奨。
+         アプリ固有領域 (cacheDir 等) への書き込みなら権限不要 -->
+    <!--
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                     android:maxSdkVersion="28"/>
+    -->
+
+    <!-- ────────────────────────────────────────────────
+         2) アプリケーション
+         ──────────────────────────────────────────────── -->
     <application
         android:name=".MyApp"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Survey"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Survey"
         tools:targetApi="31">
+
+        <!-- ★ 2-1. 起動スプラッシュ → MAIN/LAUNCHER を保持 -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
+        <!-- ★ 2-2. 本体 Activity
+             Intent-Filter が無いので exported=false で OK -->
         <activity
             android:name=".MainActivity"
-        />
-    </application>
+            android:exported="false"/>
 
+        <!-- ★ 2-3. FileProvider
+             cacheDir 等へのファイル保存を他アプリと共有するために使用 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+    </application>
 </manifest>
