@@ -1,77 +1,89 @@
+/*
+ * ui/theme/Theme.kt
+ *
+ * アプリ全体の Material3 テーマ設定をまとめたファイル。
+ * - ダイナミックカラー (Android 12+) に対応
+ * - ダーク／ライトテーマを自動切替
+ * - 透過背景を使う軽量テーマ (AppTheme) も用意
+ *
+ * 依存リソース:
+ *   Purple40, Purple80, PurpleGrey40, PurpleGrey80, Pink40, Pink80
+ *   └→ これらは別途 Color 定義ファイルで宣言してください。
+ */
 package com.negi.survey.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
+/* -------------------------------------------------------------
+ *  1) ベースカラーセット
+ * ---------------------------------------------------------- */
+// --- ダークモード用 ---
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary   = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary  = Pink80
 )
 
+// --- ライトモード用 ---
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary   = Purple40,
     secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    tertiary  = Pink40
 )
 
+/* -------------------------------------------------------------
+ *  2) SurveyTheme
+ *     - ダーク／ライト ＆ ダイナミックカラー (Android 12+) 対応
+ * ---------------------------------------------------------- */
 @Composable
 fun SurveyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = true,          // Android 12 以上で動的カラーを使うか
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+    val colors = when {
+        // ❶ 動的カラーが有効＆OSが Android 12 以上
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            val ctx = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(ctx)
+            else           dynamicLightColorScheme(ctx)
         }
-
+        // ❷ 手動で指定されたダークテーマ
         darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        // ❸ それ以外はライトテーマ
+        else      -> LightColorScheme
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        colorScheme = colors,
+        typography  = Typography,          // ← 事前に Typography.kt で定義
+        content     = content
     )
 }
 
-private val ColorScheme = lightColorScheme(
-    background = Color.Transparent, // 🔥 背景は透明に
-    surface = Color.White.copy(alpha = 0.85f),
-    primary = Color(0xFF2E7D32),
-    onPrimary = Color.White,
+/* -------------------------------------------------------------
+ *  3) AppTheme
+ *     - 透過背景を使う “軽量オーバーレイ” 用の簡易テーマ
+ *       (Welcome 画面やダイアログ等で利用)
+ * ---------------------------------------------------------- */
+private val OverlayColorScheme = lightColorScheme(
+    background   = Color.Transparent,                   // 背景は完全透過
+    surface      = Color.White.copy(alpha = 0.85f),     // 半透明パネル
+    primary      = Color(0xFF2E7D32),                   // グリーン系アクセント
+    onPrimary    = Color.White,
     onBackground = Color.Black
 )
 
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = ColorScheme,
-        typography = Typography(),
-        content = content
+        colorScheme = OverlayColorScheme,
+        typography  = Typography,
+        content     = content
     )
 }

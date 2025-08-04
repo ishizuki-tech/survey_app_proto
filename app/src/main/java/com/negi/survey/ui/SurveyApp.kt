@@ -1,5 +1,19 @@
+/*
+ * ui/SurveyApp.kt
+ *
+ * アプリのエントリーポイントとなる Composable。
+ * - Accompanist Navigation（アニメーション付き）で画面遷移を定義
+ * - Locale 変更時の再コンポーズに対応
+ * - Welcome → Question → Summary → Thanks の 4 画面構成
+ *
+ * ViewModel 依存:
+ *   └ SurveyViewModel  (回答状態・訪問履歴などを保持)
+ */
 package com.negi.survey.ui
 
+// ──────────────────────────────────
+//  Compose / Navigation
+// ──────────────────────────────────
 import androidx.compose.animation.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,150 +22,173 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable as animComposable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.negi.survey.model.QuestionSpec
-import com.negi.survey.model.SingleBranchSpec
-import com.negi.survey.model.YesNoSpec
-import com.negi.survey.ui.screen.*
-import com.negi.survey.vm.SurveyViewModel
+
+// ──────────────────────────────────
+//  Android 標準
+// ──────────────────────────────────
 import android.app.Activity
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.ui.res.painterResource
-import com.negi.survey.R
 
+// ──────────────────────────────────
+//  アプリ内リソース
+// ──────────────────────────────────
+import com.negi.survey.R
+import com.negi.survey.ui.screen.*
+import com.negi.survey.vm.SurveyViewModel
+
+/* -------------------------------------------------------------
+ *  1) ルート定義
+ * ---------------------------------------------------------- */
 sealed class Route(val route: String) {
-    object Welcome : Route("welcome")
+    object Welcome  : Route("welcome")
     object Question : Route("question/{id}") {
         fun path(id: String) = "question/$id"
     }
-    object Summary : Route("summary")
-    object Thanks : Route("thanks")
+    object Summary  : Route("summary")
+    object Thanks   : Route("thanks")
 }
 
+/* -------------------------------------------------------------
+ *  2) アプリ再起動ユーティリティ
+ * ---------------------------------------------------------- */
 fun restartApp(activity: Activity) {
-    val intent = activity.packageManager.getLaunchIntentForPackage(activity.packageName)
-    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-    activity.finish()
-    activity.startActivity(intent)
+    activity.packageManager.getLaunchIntentForPackage(activity.packageName)
+        ?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        ?.also { intent ->
+            activity.finish()
+            activity.startActivity(intent)
+        }
 }
 
+/* -------------------------------------------------------------
+ *  3) Main Composable
+ * ---------------------------------------------------------- */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SurveyApp() {
-    val viewModel: SurveyViewModel = viewModel()
-    val navController = rememberAnimatedNavController()
 
-    // 🔁 言語切り替えトリガー
+    /* ViewModel（画面状態を保持） */
+    val vm: SurveyViewModel = viewModel()
+
+    /* アニメーション対応 NavController */
+    val nav = rememberAnimatedNavController()
+
+    /* Locale 変更トリガー用キー (値が変わると Welcome 画面が再構築される) */
     var localeKey by remember { mutableStateOf(0) }
 
     AnimatedNavHost(
-        navController = navController,
+        navController    = nav,
         startDestination = Route.Welcome.route,
-        enterTransition = { slideInHorizontally { it } + fadeIn() },
-        exitTransition = { slideOutHorizontally { it } + fadeOut() }
+        enterTransition  = { slideInHorizontally { it } + fadeIn() },
+        exitTransition   = { slideOutHorizontally { it } + fadeOut() }
     ) {
-        // Welcome Screen
+
+        /* ========== ① Welcome ========== */
         animComposable(Route.Welcome.route) {
-            val visited by viewModel.visited.collectAsState()
-            val answers by viewModel.answers.collectAsState()
+            val visited by vm.visited.collectAsState()
+            val answers by vm.answers.collectAsState()
             val canResume = answers.values.any { it?.toString()?.isNotBlank() == true }
 
+            /* Locale が変わるたびに再描画させる */
             key(localeKey) {
                 WelcomePageWrapper(
                     canResume = canResume,
                     onStart = {
-                        viewModel.resetAll()
-                        navController.navigate(Route.Question.path(viewModel.graph.startId)) {
+                        vm.resetAll()
+                        nav.navigate(Route.Question.path(vm.graph.startId)) {
                             popUpTo(Route.Welcome.route) { inclusive = false }
                             launchSingleTop = true
                         }
                     },
                     onResume = {
-                        val targetId = viewModel.getFirstUnanswered()
-                        navController.navigate(Route.Question.path(targetId)) {
+                        val targetId = vm.getFirstUnanswered()
+                        nav.navigate(Route.Question.path(targetId)) {
                             popUpTo(Route.Welcome.route) { inclusive = false }
                             launchSingleTop = true
                         }
                     },
-                    onLocaleChanged = { localeKey++ }
+                    onLocaleChanged = { localeKey++ }   // ← トリガーをインクリメント
                 )
             }
         }
 
-        // Question Screen
+        /* ========== ② Question ========== */
         animComposable(
             Route.Question.route,
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->
-            val questionId = backStackEntry.arguments?.getString("id") ?: return@animComposable
-            viewModel.markVisited(questionId)
 
-            val visited by viewModel.visited.collectAsState()
-            val answers by viewModel.answers.collectAsState()
-            val spec: QuestionSpec = viewModel.graph.questions[questionId] ?: return@animComposable
-            val answer = answers[questionId] ?: ""
+            /* ---------- 質問 ID と ViewModel 状態 ---------- */
+            val qid = backStackEntry.arguments?.getString("id") ?: return@animComposable
+            vm.markVisited(qid)
 
-            // 次の質問の取得
-            val nextId = viewModel.decideNext(questionId)
-            val nextSpec = nextId?.let { viewModel.graph.questions[it] }
+            val visited by vm.visited.collectAsState()
+            val answers by vm.answers.collectAsState()
+
+            val spec   = vm.graph.questions[qid] ?: return@animComposable
+            val answer = answers[qid] ?: ""
+
+            /* ---------- 次／前の質問情報 ---------- */
+            val nextId     = vm.decideNext(qid)
+            val nextSpec   = nextId?.let { vm.graph.questions[it] }
             val nextAnswer = nextId?.let { answers[it] ?: "" }
 
-            // 前の質問の取得
-            val currentIndex = visited.indexOf(questionId)
-            val backId = if (currentIndex > 0) visited[currentIndex - 1] else null
-            val backSpec = backId?.let { viewModel.graph.questions[it] }
+            val curIndex   = visited.indexOf(qid)
+            val backId     = visited.getOrNull(curIndex - 1)
+            val backSpec   = backId?.let { vm.graph.questions[it] }
             val backAnswer = backId?.let { answers[it] ?: "" }
 
-            val bgPainter = painterResource(id = R.drawable.welcome_bg) // ← あなたの背景画像
+            /* ---------- 背景画像 ---------- */
+            val bg = painterResource(R.drawable.welcome_bg)
 
+            /* ---------- 画面本体 ---------- */
             QuestionScreen(
-                backgroundPainter = bgPainter,
-                spec = spec,
-                answer = answer,
-                nextSpec = nextSpec,
-                nextAnswer = nextAnswer,
-                backSpec = backSpec,
-                backAnswer = backAnswer,
-                onAnswer = { viewModel.setAnswer(questionId, it) },
-                onBack = {
-                    val previousId = visited.getOrNull(currentIndex - 1)
-                    navController.navigate(previousId?.let { Route.Question.path(it) } ?: Route.Welcome.route) {
-                        popUpTo(previousId?.let { Route.Question.path(it) } ?: Route.Welcome.route) { inclusive = false }
+                background   = bg,
+                spec         = spec,
+                answer       = answer,
+                nextSpec     = nextSpec,
+                nextAnswer   = nextAnswer,
+                backSpec     = backSpec,
+                backAnswer   = backAnswer,
+                onAnswer     = { vm.setAnswer(qid, it) },
+
+                /* ← 戻る */
+                onBack       = {
+                    val prevId = visited.getOrNull(curIndex - 1)
+                    nav.navigate(prevId?.let { Route.Question.path(it) } ?: Route.Welcome.route) {
+                        popUpTo(Route.Welcome.route) { inclusive = false }
                         launchSingleTop = true
                     }
                 },
-                onNext = {
+
+                /* → 次へ (回答が有効な場合のみ) */
+                onNext       = {
                     if (spec.isValid(answer)) {
-                        navController.navigate(nextId?.let { Route.Question.path(it) } ?: Route.Summary.route) {
+                        nav.navigate(nextId?.let { Route.Question.path(it) } ?: Route.Summary.route) {
                             launchSingleTop = true
                         }
                     }
                 },
+
+                /* 単一選択 + 分岐時に呼ばれる */
                 onBranchToId = { branchId ->
-                    navController.navigate(Route.Question.path(branchId)) {
-                        launchSingleTop = true
-                    }
+                    nav.navigate(Route.Question.path(branchId)) { launchSingleTop = true }
                 }
             )
         }
 
-        // Summary Screen
+        /* ========== ③ Summary ========== */
         animComposable(Route.Summary.route) {
             SummaryScreen(
-                vm = viewModel,
+                vm = vm,
                 onBack = {
-                    val lastVisited = viewModel.visited.value.lastOrNull()
-                    if (lastVisited != null) {
-                        navController.navigate(Route.Question.path(lastVisited)) {
-                            launchSingleTop = true
-                        }
-                    } else {
-                        navController.popBackStack()
-                    }
+                    vm.visited.value.lastOrNull()?.let { last ->
+                        nav.navigate(Route.Question.path(last)) { launchSingleTop = true }
+                    } ?: nav.popBackStack()
                 },
                 onFinish = {
-                    navController.navigate(Route.Thanks.route) {
+                    nav.navigate(Route.Thanks.route) {
                         popUpTo(Route.Welcome.route) { inclusive = false }
                         launchSingleTop = true
                     }
@@ -159,16 +196,16 @@ fun SurveyApp() {
             )
         }
 
-        // Thank You Screen
+        /* ========== ④ Thanks ========== */
         animComposable(Route.Thanks.route) {
             ThankPageScreen(
                 onRestart = {
-                    navController.navigate(Route.Welcome.route) {
+                    nav.navigate(Route.Welcome.route) {
                         popUpTo(Route.Welcome.route) { inclusive = true }
                         launchSingleTop = true
                     }
                 },
-                onClose = { /* Activity.finish() handled externally */ }
+                onClose = { /* Activity.finish() はホスト側で実装 */ }
             )
         }
     }
