@@ -1,0 +1,87 @@
+{
+  "version": "v1",
+  "startId": "q_start",
+  "endId": "q_end",
+  "questions": {
+    "q_start": {
+      "id": "q_start",
+      "type": "yesno",
+      "title": "本調査への参加に同意しますか？（所要2〜3分）",
+      "yesLabel": "同意する",
+      "noLabel": "同意しない",
+      "nextIdIfYes": "q_usage",
+      "nextIdIfNo": "q_exit_thanks"
+    },
+
+    "q_usage": {
+      "id": "q_usage",
+      "type": "single",
+      "title": "このサービスの利用頻度を教えてください",
+      "options": [
+        { "key": "daily",   "label": "ほぼ毎日" },
+        { "key": "weekly",  "label": "週に数回" },
+        { "key": "monthly", "label": "月に数回" },
+        { "key": "first",   "label": "今回が初めて" }
+      ],
+      "nextId": "q_sat"
+    },
+
+    "q_sat": {
+      "id": "q_sat",
+      "type": "single_branch",
+      "title": "本日の体験の満足度を教えてください（5=とても満足〜1=不満）",
+      "options": [
+        { "key": "5", "label": "5 とても満足", "nextId": "q_comment" },
+        { "key": "4", "label": "4 満足",       "nextId": "q_comment" },
+        { "key": "3", "label": "3 ふつう",     "nextId": "q_comment" },
+        { "key": "2", "label": "2 やや不満",   "nextId": "q_issue" },
+        { "key": "1", "label": "1 不満",       "nextId": "q_issue" }
+      ],
+      "fallbackNextId": "q_comment"
+    },
+
+    "q_issue": {
+      "id": "q_issue",
+      "type": "free",
+      "title": "差し支えなければ、不満だった点を教えてください（自由記述）",
+      "nextId": "q_comment"
+    },
+
+    "q_comment": {
+      "id": "q_comment",
+      "type": "free",
+      "title": "良かった点や改善提案があればご記入ください（任意）",
+      "nextId": "q_contact_permission"
+    },
+
+    "q_contact_permission": {
+      "id": "q_contact_permission",
+      "type": "yesno",
+      "title": "追加の質問や結果共有のために連絡してもよいですか？",
+      "yesLabel": "はい（連絡先を入力）",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q_contact",
+      "nextIdIfNo": "q_end"
+    },
+
+    "q_contact": {
+      "id": "q_contact",
+      "type": "free",
+      "title": "ご連絡先（メールまたは電話、任意）",
+      "nextId": "q_end"
+    },
+
+    "q_exit_thanks": {
+      "id": "q_exit_thanks",
+      "type": "free",
+      "title": "ご協力ありがとうございました（差し支えなければ辞退理由）",
+      "nextId": "q_end"
+    },
+
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "title": "終了"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-08-12T07:05:51.345099Z",
+  "summary": {
+    "nodes": 4,
+    "edges": 4,
+    "startId": "s",
+    "endId": "e",
+    "unreachable_count": 0,
+    "errors_count": 0,
+    "warnings_count": 0
+  },
+  "errors": [],
+  "warnings": [],
+  "info": []
+}

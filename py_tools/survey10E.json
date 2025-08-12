@@ -1,0 +1,86 @@
+{
+  "version": "v1",
+  "startId": "q1",
+  "endId": "q_end",
+  "questions": {
+    "q1": {
+      "id": "q1",
+      "type": "yesno",
+      "title": "Have you used our product before?",
+      "yesLabel": "Yes",
+      "noLabel": "No",
+      "nextIdIfYes": "q2",
+      "nextIdIfNo": "q_end"
+    },
+
+    "q2": {
+      "id": "q2",
+      "type": "single",
+      "title": "How often do you use it?",
+      "options": [
+        { "key": "daily", "label": "Daily" },
+        { "key": "weekly", "label": "Weekly" },
+        { "key": "monthly", "label": "Monthly" },
+        { "key": "first", "label": "This is my first time" }
+      ],
+      "nextId": "q3"
+    },
+
+    "q3": {
+      "id": "q3",
+      "type": "single",
+      "title": "Overall, how satisfied are you today? (5 = very satisfied, 1 = dissatisfied)",
+      "options": [
+        { "key": "5", "label": "5 Very satisfied" },
+        { "key": "4", "label": "4 Satisfied" },
+        { "key": "3", "label": "3 Neutral" },
+        { "key": "2", "label": "2 Slightly dissatisfied" },
+        { "key": "1", "label": "1 Dissatisfied" }
+      ],
+      "nextId": "q4"
+    },
+
+    "q4": {
+      "id": "q4",
+      "type": "free",
+      "title": "What did you like the most? (optional)",
+      "nextId": "q5"
+    },
+
+    "q5": {
+      "id": "q5",
+      "type": "single",
+      "title": "Which area should we improve most?",
+      "options": [
+        { "key": "speed", "label": "Speed/performance" },
+        { "key": "usability", "label": "Ease of use" },
+        { "key": "price", "label": "Pricing" },
+        { "key": "support", "label": "Customer support" }
+      ],
+      "nextId": "q6"
+    },
+
+    "q6": {
+      "id": "q6",
+      "type": "yesno",
+      "title": "Would you recommend us to a friend?",
+      "yesLabel": "Yes",
+      "noLabel": "No",
+      "nextIdIfYes": "q7",
+      "nextIdIfNo": "q7"
+    },
+
+    "q7": {
+      "id": "q7",
+      "type": "free",
+      "title": "Any other comments or suggestions? (optional)",
+      "nextId": "q_end"
+    },
+
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "title": "Thanks for your time!"
+    }
+  }
+}

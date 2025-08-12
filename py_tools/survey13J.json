@@ -1,0 +1,399 @@
+{
+  "version": "v1",
+  "startId": "q1",
+  "endId": "q_end",
+  "questions": {
+    "q1": {
+      "id": "q1",
+      "type": "yesno",
+      "title": "本調査への参加に同意しますか？（所要約10分）",
+      "yesLabel": "同意する",
+      "noLabel": "同意しない",
+      "nextIdIfYes": "q2",
+      "nextIdIfNo": "q_end"
+    },
+
+    "q2": {
+      "id": "q2",
+      "type": "single",
+      "title": "直近3か月のサービス利用頻度を教えてください",
+      "options": [
+        { "key": "daily", "label": "ほぼ毎日" },
+        { "key": "weekly", "label": "週に数回" },
+        { "key": "monthly", "label": "月に数回" },
+        { "key": "first", "label": "今回が初めて" }
+      ],
+      "nextId": "q3"
+    },
+
+    "q3": {
+      "id": "q3",
+      "type": "single",
+      "title": "主な利用目的はどれに近いですか？",
+      "options": [
+        { "key": "work", "label": "業務用途" },
+        { "key": "study", "label": "学習・自己研鑽" },
+        { "key": "personal", "label": "個人利用" },
+        { "key": "other", "label": "その他" }
+      ],
+      "nextId": "q4"
+    },
+
+    "q4": {
+      "id": "q4",
+      "type": "single_branch",
+      "title": "本日の総合満足度を教えてください（5=とても満足〜1=不満）",
+      "options": [
+        { "key": "5", "label": "5 とても満足", "nextId": "q6" },
+        { "key": "4", "label": "4 満足",       "nextId": "q6" },
+        { "key": "3", "label": "3 ふつう",     "nextId": "q6" },
+        { "key": "2", "label": "2 やや不満",   "nextId": "q5" },
+        { "key": "1", "label": "1 不満",       "nextId": "q5" }
+      ],
+      "fallbackNextId": "q6"
+    },
+
+    "q5": {
+      "id": "q5",
+      "type": "free",
+      "title": "不満だった点があれば具体的に教えてください（任意）",
+      "nextId": "q6"
+    },
+
+    "q6": {
+      "id": "q6",
+      "type": "single_branch",
+      "title": "友人や同僚にこのサービスを勧めたいと思いますか？（0〜10）",
+      "options": [
+        { "key": "10", "label": "10" },
+        { "key": "9",  "label": "9" },
+        { "key": "8",  "label": "8" },
+        { "key": "7",  "label": "7" },
+        { "key": "6",  "label": "6", "nextId": "q7" },
+        { "key": "5",  "label": "5", "nextId": "q7" },
+        { "key": "4",  "label": "4", "nextId": "q7" },
+        { "key": "3",  "label": "3", "nextId": "q7" },
+        { "key": "2",  "label": "2", "nextId": "q7" },
+        { "key": "1",  "label": "1", "nextId": "q7" },
+        { "key": "0",  "label": "0", "nextId": "q7" }
+      ],
+      "fallbackNextId": "q8"
+    },
+
+    "q7": {
+      "id": "q7",
+      "type": "free",
+      "title": "今の評価（0〜6）の理由を教えてください（任意）",
+      "nextId": "q8"
+    },
+
+    "q8": {
+      "id": "q8",
+      "type": "yesno",
+      "title": "初回設定（オンボーディング）は分かりやすかったですか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q9",
+      "nextIdIfNo": "q9"
+    },
+
+    "q9": {
+      "id": "q9",
+      "type": "single",
+      "title": "動作速度の体感を教えてください",
+      "options": [
+        { "key": "veryfast", "label": "とても速い" },
+        { "key": "fast",     "label": "速い" },
+        { "key": "ok",       "label": "ふつう" },
+        { "key": "slow",     "label": "遅い" }
+      ],
+      "nextId": "q10"
+    },
+
+    "q10": {
+      "id": "q10",
+      "type": "single",
+      "title": "使いやすさ（UI/UX）を評価してください",
+      "options": [
+        { "key": "5", "label": "5 とても良い" },
+        { "key": "4", "label": "4 良い" },
+        { "key": "3", "label": "3 ふつう" },
+        { "key": "2", "label": "2 悪い" },
+        { "key": "1", "label": "1 とても悪い" }
+      ],
+      "nextId": "q11"
+    },
+
+    "q11": {
+      "id": "q11",
+      "type": "yesno",
+      "title": "直近1か月で重大な不具合や長時間の停止に遭遇しましたか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q12",
+      "nextIdIfNo": "q13"
+    },
+
+    "q12": {
+      "id": "q12",
+      "type": "free",
+      "title": "どのような不具合・停止でしたか？影響範囲や時間も（任意）",
+      "nextId": "q13"
+    },
+
+    "q13": {
+      "id": "q13",
+      "type": "free",
+      "title": "不足している機能や改善してほしい点があれば教えてください（任意）",
+      "nextId": "q14"
+    },
+
+    "q14": {
+      "id": "q14",
+      "type": "yesno",
+      "title": "ヘルプ記事やドキュメントは役立ちましたか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q16",
+      "nextIdIfNo": "q15"
+    },
+
+    "q15": {
+      "id": "q15",
+      "type": "free",
+      "title": "どのようなドキュメントがあればより役立ちますか？（任意）",
+      "nextId": "q16"
+    },
+
+    "q16": {
+      "id": "q16",
+      "type": "yesno",
+      "title": "サポートに問い合わせたことはありますか？",
+      "yesLabel": "ある",
+      "noLabel": "ない",
+      "nextIdIfYes": "q17",
+      "nextIdIfNo": "q18"
+    },
+
+    "q17": {
+      "id": "q17",
+      "type": "single",
+      "title": "どのチャネルを利用しましたか？",
+      "options": [
+        { "key": "chat", "label": "チャット" },
+        { "key": "mail", "label": "メール" },
+        { "key": "phone", "label": "電話" },
+        { "key": "forum", "label": "コミュニティ/フォーラム" }
+      ],
+      "nextId": "q18"
+    },
+
+    "q18": {
+      "id": "q18",
+      "type": "single",
+      "title": "サポート対応の満足度を教えてください",
+      "options": [
+        { "key": "5", "label": "5 とても満足" },
+        { "key": "4", "label": "4 満足" },
+        { "key": "3", "label": "3 ふつう" },
+        { "key": "2", "label": "2 やや不満" },
+        { "key": "1", "label": "1 不満" }
+      ],
+      "nextId": "q19"
+    },
+
+    "q19": {
+      "id": "q19",
+      "type": "single",
+      "title": "価格に対する納得感はいかがですか？",
+      "options": [
+        { "key": "high", "label": "高すぎる" },
+        { "key": "fair", "label": "妥当" },
+        { "key": "cheap", "label": "安い" }
+      ],
+      "nextId": "q20"
+    },
+
+    "q20": {
+      "id": "q20",
+      "type": "yesno",
+      "title": "料金プランの説明は分かりやすいと感じましたか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q22",
+      "nextIdIfNo": "q21"
+    },
+
+    "q21": {
+      "id": "q21",
+      "type": "free",
+      "title": "どの点が分かりにくかったですか？（任意）",
+      "nextId": "q22"
+    },
+
+    "q22": {
+      "id": "q22",
+      "type": "yesno",
+      "title": "追加料金を支払ってでも使いたい上位機能はありますか？",
+      "yesLabel": "ある",
+      "noLabel": "ない",
+      "nextIdIfYes": "q23",
+      "nextIdIfNo": "q24"
+    },
+
+    "q23": {
+      "id": "q23",
+      "type": "free",
+      "title": "上位機能として欲しいものを具体的に（任意）",
+      "nextId": "q24"
+    },
+
+    "q24": {
+      "id": "q24",
+      "type": "yesno",
+      "title": "競合サービスを併用・または乗り換えを検討していますか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q25",
+      "nextIdIfNo": "q26"
+    },
+
+    "q25": {
+      "id": "q25",
+      "type": "single",
+      "title": "主な競合サービスを選んでください",
+      "options": [
+        { "key": "A", "label": "競合A" },
+        { "key": "B", "label": "競合B" },
+        { "key": "C", "label": "競合C" },
+        { "key": "other", "label": "その他" }
+      ],
+      "nextId": "q26"
+    },
+
+    "q26": {
+      "id": "q26",
+      "type": "single",
+      "title": "今後1年以内に乗り換える可能性は？",
+      "options": [
+        { "key": "high", "label": "高い" },
+        { "key": "mid",  "label": "どちらともいえない" },
+        { "key": "low",  "label": "低い" }
+      ],
+      "nextId": "q27"
+    },
+
+    "q27": {
+      "id": "q27",
+      "type": "single",
+      "title": "主な利用デバイスは？",
+      "options": [
+        { "key": "pc", "label": "PC" },
+        { "key": "mobile", "label": "スマートフォン" },
+        { "key": "tablet", "label": "タブレット" }
+      ],
+      "nextId": "q28"
+    },
+
+    "q28": {
+      "id": "q28",
+      "type": "single",
+      "title": "OS/プラットフォームは？",
+      "options": [
+        { "key": "win", "label": "Windows" },
+        { "key": "mac", "label": "macOS" },
+        { "key": "android", "label": "Android" },
+        { "key": "ios", "label": "iOS/iPadOS" },
+        { "key": "linux", "label": "Linux" }
+      ],
+      "nextId": "q29"
+    },
+
+    "q29": {
+      "id": "q29",
+      "type": "single",
+      "title": "主なブラウザは？",
+      "options": [
+        { "key": "chrome", "label": "Chrome" },
+        { "key": "safari", "label": "Safari" },
+        { "key": "edge", "label": "Edge" },
+        { "key": "firefox", "label": "Firefox" },
+        { "key": "other", "label": "その他" }
+      ],
+      "nextId": "q30"
+    },
+
+    "q30": {
+      "id": "q30",
+      "type": "yesno",
+      "title": "通知（メール/アプリ/ブラウザ）は役に立ちましたか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q32",
+      "nextIdIfNo": "q31"
+    },
+
+    "q31": {
+      "id": "q31",
+      "type": "free",
+      "title": "通知の頻度・内容の希望があれば教えてください（任意）",
+      "nextId": "q32"
+    },
+
+    "q32": {
+      "id": "q32",
+      "type": "single",
+      "title": "データの安全性・プライバシーへの不安度は？",
+      "options": [
+        { "key": "none", "label": "不安はない" },
+        { "key": "some", "label": "やや不安" },
+        { "key": "high", "label": "大きく不安" }
+      ],
+      "nextId": "q33"
+    },
+
+    "q33": {
+      "id": "q33",
+      "type": "yesno",
+      "title": "フォローアップの連絡を受けてもよいですか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q34",
+      "nextIdIfNo": "q35"
+    },
+
+    "q34": {
+      "id": "q34",
+      "type": "free",
+      "title": "ご連絡先（メール/電話/チャットIDなど、任意）",
+      "nextId": "q35"
+    },
+
+    "q35": {
+      "id": "q35",
+      "type": "free",
+      "title": "年齢（任意・半角数字）",
+      "nextId": "q36"
+    },
+
+    "q36": {
+      "id": "q36",
+      "type": "single",
+      "title": "ご職業を選んでください",
+      "options": [
+        { "key": "employee", "label": "会社員/公務員" },
+        { "key": "self",     "label": "自営業/フリーランス" },
+        { "key": "student",  "label": "学生" },
+        { "key": "homemaker","label": "主婦/主夫" },
+        { "key": "other",    "label": "その他" }
+      ],
+      "nextId": "q_end"
+    },
+
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "title": "ご協力ありがとうございました！"
+    }
+  }
+}

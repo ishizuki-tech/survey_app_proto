@@ -1,0 +1,326 @@
+{
+  "version": "v1",
+  "startId": "q_start",
+  "endId": "q_end",
+  "questions": {
+    "q_start": {
+      "id": "q_start",
+      "type": "yesno",
+      "title": "本調査への参加に同意しますか？（所要10〜15分）",
+      "yesLabel": "同意する",
+      "noLabel": "同意しない",
+      "nextIdIfYes": "q_intro_video",
+      "nextIdIfNo": "q_exit_thanks"
+    },
+
+    "q_intro_video": {
+      "id": "q_intro_video",
+      "type": "video",
+      "title": "この調査の目的と流れ（1分動画）をご覧ください",
+      "nextId": "q_farming_maize"
+    },
+
+    "q_exit_thanks": {
+      "id": "q_exit_thanks",
+      "type": "free",
+      "title": "ご協力ありがとうございました（自由記述：辞退理由があれば）",
+      "nextId": "q_end"
+    },
+
+    "q_farming_maize": {
+      "id": "q_farming_maize",
+      "type": "yesno",
+      "title": "現在、トウモロコシを栽培していますか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q_region",
+      "nextIdIfNo": "q_past_maize"
+    },
+    "q_past_maize": {
+      "id": "q_past_maize",
+      "type": "yesno",
+      "title": "過去3年以内にトウモロコシを栽培したことはありますか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q_region",
+      "nextIdIfNo": "q_ineligible_msg"
+    },
+    "q_ineligible_msg": {
+      "id": "q_ineligible_msg",
+      "type": "free",
+      "title": "今回の調査はトウモロコシ栽培経験者が対象です。ご協力ありがとうございました。",
+      "nextId": "q_end"
+    },
+
+    "q_region": {
+      "id": "q_region",
+      "type": "single",
+      "title": "お住まいの地域を選んでください",
+      "options": [
+        { "key": "north", "label": "北部" },
+        { "key": "central", "label": "中部" },
+        { "key": "south", "label": "南部" }
+      ],
+      "nextId": "q_gender"
+    },
+    "q_gender": {
+      "id": "q_gender",
+      "type": "single",
+      "title": "性別を選んでください",
+      "options": [
+        { "key": "m", "label": "男性" },
+        { "key": "f", "label": "女性" },
+        { "key": "o", "label": "回答しない" }
+      ],
+      "nextId": "q_age"
+    },
+    "q_age": {
+      "id": "q_age",
+      "type": "free",
+      "title": "年齢（半角数字で入力）",
+      "nextId": "q_edu"
+    },
+    "q_edu": {
+      "id": "q_edu",
+      "type": "single",
+      "title": "最終学歴を選んでください",
+      "options": [
+        { "key": "p", "label": "初等教育" },
+        { "key": "s", "label": "中等教育" },
+        { "key": "h", "label": "高等教育" }
+      ],
+      "nextId": "q_phone_permission"
+    },
+
+    "q_phone_permission": {
+      "id": "q_phone_permission",
+      "type": "yesno",
+      "title": "後日、調査結果の共有や追加質問のために連絡してもよいですか？",
+      "yesLabel": "はい（連絡先を入力）",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q_phone",
+      "nextIdIfNo": "q_variety_hub"
+    },
+    "q_phone": {
+      "id": "q_phone",
+      "type": "free",
+      "title": "電話番号（任意）",
+      "nextId": "q_variety_hub"
+    },
+
+    "q_variety_hub": {
+      "id": "q_variety_hub",
+      "type": "multi_hub",
+      "title": "3つの品種（A/B/C）について順不同で確認してください",
+      "order": "any",
+      "entries": [
+        { "key": "A", "label": "品種A", "startId": "q_v1_intro" },
+        { "key": "B", "label": "品種B", "startId": "q_v2_intro" },
+        { "key": "C", "label": "品種C", "startId": "q_v3_intro" }
+      ],
+      "afterAllNextId": "q_choice_best"
+    },
+
+    "q_v1_intro": {
+      "id": "q_v1_intro",
+      "type": "video",
+      "title": "品種Aの紹介動画（1分）",
+      "nextId": "q_v1_interest"
+    },
+    "q_v1_interest": {
+      "id": "q_v1_interest",
+      "type": "single",
+      "title": "品種Aにどの程度興味がありますか？",
+      "options": [
+        { "key": "5", "label": "とても高い" },
+        { "key": "4", "label": "やや高い" },
+        { "key": "3", "label": "ふつう" },
+        { "key": "2", "label": "やや低い" },
+        { "key": "1", "label": "低い" }
+      ],
+      "nextId": "q_v1_try"
+    },
+    "q_v1_try": {
+      "id": "q_v1_try",
+      "type": "yesno",
+      "title": "次のシーズンで一部の区画で試してみたいですか？（品種A）",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q_v1_area",
+      "nextIdIfNo": "q_v1_reason"
+    },
+    "q_v1_area": {
+      "id": "q_v1_area",
+      "type": "free",
+      "title": "試してみる区画の面積（反/haなど単位込みで）",
+      "nextId": "q_v1_done"
+    },
+    "q_v1_reason": {
+      "id": "q_v1_reason",
+      "type": "free",
+      "title": "試さない理由（自由記述）",
+      "nextId": "q_v1_done"
+    },
+    "q_v1_done": {
+      "id": "q_v1_done",
+      "type": "return",
+      "title": "品種Aの確認を終了してハブに戻ります",
+      "returnTo": "q_variety_hub"
+    },
+
+    "q_v2_intro": {
+      "id": "q_v2_intro",
+      "type": "video",
+      "title": "品種Bの紹介動画（1分）",
+      "nextId": "q_v2_interest"
+    },
+    "q_v2_interest": {
+      "id": "q_v2_interest",
+      "type": "single",
+      "title": "品種Bにどの程度興味がありますか？",
+      "options": [
+        { "key": "5", "label": "とても高い" },
+        { "key": "4", "label": "やや高い" },
+        { "key": "3", "label": "ふつう" },
+        { "key": "2", "label": "やや低い" },
+        { "key": "1", "label": "低い" }
+      ],
+      "nextId": "q_v2_voice"
+    },
+    "q_v2_voice": {
+      "id": "q_v2_voice",
+      "type": "voice",
+      "title": "品種Bについて自由にご意見をお話しください（録音）",
+      "nextId": "q_v2_done"
+    },
+    "q_v2_done": {
+      "id": "q_v2_done",
+      "type": "return",
+      "title": "品種Bの確認を終了してハブに戻ります",
+      "returnTo": "q_variety_hub"
+    },
+
+    "q_v3_intro": {
+      "id": "q_v3_intro",
+      "type": "video",
+      "title": "品種Cの紹介動画（1分）",
+      "nextId": "q_v3_branch"
+    },
+    "q_v3_branch": {
+      "id": "q_v3_branch",
+      "type": "single_branch",
+      "title": "品種Cの説明で特に重視したい点は？",
+      "options": [
+        { "key": "yield", "label": "収量" , "nextId": "q_v3_yield_free" },
+        { "key": "disease", "label": "耐病性", "nextId": "q_v3_disease_free" },
+        { "key": "price", "label": "種子価格" }
+      ],
+      "fallbackNextId": "q_v3_price_free"
+    },
+    "q_v3_yield_free": {
+      "id": "q_v3_yield_free",
+      "type": "free",
+      "title": "収量について、期待値や懸念点があれば教えてください",
+      "nextId": "q_v3_done"
+    },
+    "q_v3_disease_free": {
+      "id": "q_v3_disease_free",
+      "type": "free",
+      "title": "耐病性について、必要な情報や経験談があれば教えてください",
+      "nextId": "q_v3_done"
+    },
+    "q_v3_price_free": {
+      "id": "q_v3_price_free",
+      "type": "free",
+      "title": "種子価格について、希望や上限などがあれば教えてください",
+      "nextId": "q_v3_done"
+    },
+    "q_v3_done": {
+      "id": "q_v3_done",
+      "type": "return",
+      "title": "品種Cの確認を終了してハブに戻ります",
+      "returnTo": "q_variety_hub"
+    },
+
+    "q_choice_best": {
+      "id": "q_choice_best",
+      "type": "single",
+      "title": "3つの品種のうち、最も使ってみたいのはどれですか？",
+      "options": [
+        { "key": "A", "label": "品種A" },
+        { "key": "B", "label": "品種B" },
+        { "key": "C", "label": "品種C" }
+      ],
+      "nextId": "q_choice_least"
+    },
+    "q_choice_least": {
+      "id": "q_choice_least",
+      "type": "single",
+      "title": "最も使いたくない（優先度が低い）のはどれですか？",
+      "options": [
+        { "key": "A", "label": "品種A" },
+        { "key": "B", "label": "品種B" },
+        { "key": "C", "label": "品種C" }
+      ],
+      "nextId": "q_missing_info"
+    },
+
+    "q_missing_info": {
+      "id": "q_missing_info",
+      "type": "single_branch",
+      "title": "意思決定に足りない情報はありますか？最も近いものを1つ選んでください",
+      "options": [
+        { "key": "price", "label": "価格情報", "nextId": "q_missing_price" },
+        { "key": "trial", "label": "試験データ（収量・環境）", "nextId": "q_missing_trial" },
+        { "key": "risk", "label": "リスク（病害・気象）" }
+      ],
+      "fallbackNextId": "q_missing_other"
+    },
+    "q_missing_price": {
+      "id": "q_missing_price",
+      "type": "free",
+      "title": "どのような価格情報があれば意思決定しやすいですか？",
+      "nextId": "q_followup_consent"
+    },
+    "q_missing_trial": {
+      "id": "q_missing_trial",
+      "type": "free",
+      "title": "どのような試験データ（収量・地域差など）が必要ですか？",
+      "nextId": "q_followup_consent"
+    },
+    "q_missing_other": {
+      "id": "q_missing_other",
+      "type": "free",
+      "title": "その他、必要な情報があれば自由に記入してください",
+      "nextId": "q_followup_consent"
+    },
+
+    "q_followup_consent": {
+      "id": "q_followup_consent",
+      "type": "yesno",
+      "title": "必要な情報が揃った際に、フォローアップの連絡を受けてもよいですか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q_contact",
+      "nextIdIfNo": "q_end_msg"
+    },
+    "q_contact": {
+      "id": "q_contact",
+      "type": "free",
+      "title": "ご連絡先（電話／メール／WhatsApp等）",
+      "nextId": "q_end_msg"
+    },
+    "q_end_msg": {
+      "id": "q_end_msg",
+      "type": "free",
+      "title": "これで調査は終了です。ご協力ありがとうございました！",
+      "nextId": "q_end"
+    },
+
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "title": "終了"
+    }
+  }
+}

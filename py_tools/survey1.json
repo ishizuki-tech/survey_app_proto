@@ -1,0 +1,89 @@
+{
+  "version": "v1",
+  "startId": "q_start",
+  "endId": "q_end",
+  "questions": {
+    "q_start": {
+      "id": "q_start",
+      "type": "yesno",
+      "titleRes": "q_start_title",
+      "yesLabelRes": "yes",
+      "noLabelRes": "no",
+      "nextIdIfYes": "q_crop",
+      "nextIdIfNo": "q_hub"
+    },
+    "q_crop": {
+      "id": "q_crop",
+      "type": "single_branch",
+      "titleRes": "q_crop_title",
+      "options": [
+        { "key": "maize", "labelRes": "maize", "nextId": "q_maize_area" },
+        { "key": "sorghum", "labelRes": "sorghum", "nextId": "q_sorghum_area" },
+        { "key": "other", "labelRes": "other", "nextId": "q_other_free" }
+      ],
+      "fallbackNextId": "q_end"
+    },
+    "q_maize_area": {
+      "id": "q_maize_area",
+      "type": "free",
+      "titleRes": "q_maize_area_title",
+      "nextId": "q_end"
+    },
+    "q_sorghum_area": {
+      "id": "q_sorghum_area",
+      "type": "free",
+      "titleRes": "q_sorghum_area_title",
+      "nextId": "q_end"
+    },
+    "q_other_free": {
+      "id": "q_other_free",
+      "type": "free",
+      "titleRes": "q_other_free_title",
+      "nextId": "q_end"
+    },
+    "q_hub": {
+      "id": "q_hub",
+      "type": "multi_hub",
+      "titleRes": "q_hub_title",
+      "order": "any",
+      "entries": [
+        { "key": "A", "labelRes": "hubA", "startId": "q_a1" },
+        { "key": "B", "labelRes": "hubB", "startId": "q_b1" }
+      ],
+      "afterAllNextId": "q_end"
+    },
+    "q_a1": {
+      "id": "q_a1",
+      "type": "single",
+      "titleRes": "q_a1_title",
+      "options": [
+        { "key": "x", "labelRes": "opt_x" },
+        { "key": "y", "labelRes": "opt_y" }
+      ],
+      "nextId": "q_a_done"
+    },
+    "q_a_done": {
+      "id": "q_a_done",
+      "type": "return",
+      "titleRes": "done",
+      "returnTo": "q_hub"
+    },
+    "q_b1": {
+      "id": "q_b1",
+      "type": "free",
+      "titleRes": "q_b1_title",
+      "nextId": "q_b_done"
+    },
+    "q_b_done": {
+      "id": "q_b_done",
+      "type": "return",
+      "titleRes": "done",
+      "returnTo": "q_hub"
+    },
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "titleRes": "thank_you"
+    }
+  }
+}

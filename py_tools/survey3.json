@@ -1,0 +1,393 @@
+{
+  "version": "v1",
+  "startId": "q_start",
+  "endId": "q_end",
+  "questions": {
+    "q_start": {
+      "id": "q_start",
+      "type": "yesno",
+      "titleRes": "q_start_title",
+      "yesLabelRes": "yes",
+      "noLabelRes": "no",
+      "nextIdIfYes": "q_intro_video",
+      "nextIdIfNo": "q_skip_free"
+    },
+    "q_intro_video": {
+      "id": "q_intro_video",
+      "type": "video",
+      "titleRes": "q_intro_video_title",
+      "nextId": "q_consent"
+    },
+    "q_consent": {
+      "id": "q_consent",
+      "type": "yesno",
+      "titleRes": "q_consent_title",
+      "nextIdIfYes": "q_intent",
+      "nextIdIfNo": "q_exit_msg"
+    },
+    "q_exit_msg": {
+      "id": "q_exit_msg",
+      "type": "free",
+      "titleRes": "q_exit_msg_title",
+      "nextId": "q_end_early"
+    },
+    "q_skip_free": {
+      "id": "q_skip_free",
+      "type": "free",
+      "titleRes": "q_skip_free_title",
+      "nextId": "q_intent"
+    },
+    "q_intent": {
+      "id": "q_intent",
+      "type": "single",
+      "titleRes": "q_intent_title",
+      "options": [
+        { "key": "crop", "labelRes": "opt_crop", "nextId": "q_crop_branch" },
+        { "key": "profile", "labelRes": "opt_profile", "nextId": "q_profile_branch" },
+        { "key": "other", "labelRes": "opt_other" }
+      ],
+      "nextId": "q_profile_branch"
+    },
+    "q_crop_branch": {
+      "id": "q_crop_branch",
+      "type": "single_branch",
+      "titleRes": "q_crop_branch_title",
+      "options": [
+        { "key": "maize", "labelRes": "maize", "nextId": "q_maize_area" },
+        { "key": "sorghum", "labelRes": "sorghum", "nextId": "q_sorghum_area" },
+        { "key": "other", "labelRes": "other" }
+      ],
+      "fallbackNextId": "q_other_free"
+    },
+    "q_maize_area": {
+      "id": "q_maize_area",
+      "type": "free",
+      "titleRes": "q_maize_area_title",
+      "nextId": "q_hub_main"
+    },
+    "q_sorghum_area": {
+      "id": "q_sorghum_area",
+      "type": "free",
+      "titleRes": "q_sorghum_area_title",
+      "nextId": "q_hub_main"
+    },
+    "q_other_free": {
+      "id": "q_other_free",
+      "type": "free",
+      "titleRes": "q_other_free_title",
+      "nextId": "q_hub_main"
+    },
+    "q_profile_branch": {
+      "id": "q_profile_branch",
+      "type": "single_branch",
+      "titleRes": "q_profile_branch_title",
+      "options": [
+        { "key": "adult", "labelRes": "adult", "nextId": "q_age_free" },
+        { "key": "child", "labelRes": "child", "nextId": "q_guardian_voice" },
+        { "key": "other", "labelRes": "other" }
+      ],
+      "fallbackNextId": "q_profile_other_free"
+    },
+    "q_age_free": {
+      "id": "q_age_free",
+      "type": "free",
+      "titleRes": "q_age_free_title",
+      "nextId": "q_edu_single"
+    },
+    "q_edu_single": {
+      "id": "q_edu_single",
+      "type": "single",
+      "titleRes": "q_edu_single_title",
+      "options": [
+        { "key": "p", "labelRes": "primary" },
+        { "key": "s", "labelRes": "secondary" },
+        { "key": "h", "labelRes": "higher" }
+      ],
+      "nextId": "q_hub_main"
+    },
+    "q_profile_other_free": {
+      "id": "q_profile_other_free",
+      "type": "free",
+      "titleRes": "q_profile_other_free_title",
+      "nextId": "q_hub_main"
+    },
+    "q_guardian_voice": {
+      "id": "q_guardian_voice",
+      "type": "voice",
+      "titleRes": "q_guardian_voice_title",
+      "nextId": "q_hub_main"
+    },
+    "q_hub_main": {
+      "id": "q_hub_main",
+      "type": "multi_hub",
+      "titleRes": "q_hub_main_title",
+      "order": "any",
+      "entries": [
+        { "key": "A", "labelRes": "hubA", "startId": "q_a1" },
+        { "key": "B", "labelRes": "hubB", "startId": "q_b1" },
+        { "key": "C", "labelRes": "hubC", "startId": "q_c1" },
+        { "key": "D", "labelRes": "hubD", "startId": "q_d1" }
+      ],
+      "afterAllNextId": "q_hub2"
+    },
+    "q_a1": {
+      "id": "q_a1",
+      "type": "single",
+      "titleRes": "q_a1_title",
+      "options": [
+        { "key": "x", "labelRes": "opt_x" },
+        { "key": "y", "labelRes": "opt_y" }
+      ],
+      "nextId": "q_a2"
+    },
+    "q_a2": {
+      "id": "q_a2",
+      "type": "free",
+      "titleRes": "q_a2_title",
+      "nextId": "mh_a"
+    },
+    "mh_a": {
+      "id": "mh_a",
+      "type": "multi_hub",
+      "titleRes": "mh_a_title",
+      "order": "any",
+      "entries": [
+        { "key": "A1", "labelRes": "a1", "startId": "q_a_sub1" },
+        { "key": "A2", "labelRes": "a2", "startId": "q_a_sub2" }
+      ],
+      "afterAllNextId": "q_a_done"
+    },
+    "q_a_sub1": {
+      "id": "q_a_sub1",
+      "type": "free",
+      "titleRes": "q_a_sub1_title",
+      "nextId": "q_a_sub_done"
+    },
+    "q_a_sub2": {
+      "id": "q_a_sub2",
+      "type": "single_branch",
+      "titleRes": "q_a_sub2_title",
+      "options": [
+        { "key": "go", "labelRes": "go", "nextId": "q_a_sub_done" },
+        { "key": "skip", "labelRes": "skip" }
+      ],
+      "fallbackNextId": "q_a_sub_done"
+    },
+    "q_a_sub_done": {
+      "id": "q_a_sub_done",
+      "type": "return",
+      "titleRes": "done_a_sub",
+      "returnTo": "mh_a"
+    },
+    "q_a_done": {
+      "id": "q_a_done",
+      "type": "return",
+      "titleRes": "done_a",
+      "returnTo": "q_hub_main"
+    },
+    "q_b1": {
+      "id": "q_b1",
+      "type": "free",
+      "titleRes": "q_b1_title",
+      "nextId": "q_b2"
+    },
+    "q_b2": {
+      "id": "q_b2",
+      "type": "single_branch",
+      "titleRes": "q_b2_title",
+      "options": [
+        { "key": "ok", "labelRes": "ok", "nextId": "q_b3" },
+        { "key": "redo", "labelRes": "redo", "nextId": "q_b_done" }
+      ],
+      "fallbackNextId": "q_b_done"
+    },
+    "q_b3": {
+      "id": "q_b3",
+      "type": "video",
+      "titleRes": "q_b3_title",
+      "nextId": "q_b_done"
+    },
+    "q_b_done": {
+      "id": "q_b_done",
+      "type": "return",
+      "titleRes": "done_b",
+      "returnTo": "q_hub_main"
+    },
+    "q_c1": {
+      "id": "q_c1",
+      "type": "single",
+      "titleRes": "q_c1_title",
+      "options": [
+        { "key": "m", "labelRes": "opt_m", "nextId": "q_c2" },
+        { "key": "n", "labelRes": "opt_n" }
+      ],
+      "nextId": "q_c_fb"
+    },
+    "q_c2": {
+      "id": "q_c2",
+      "type": "voice",
+      "titleRes": "q_c2_title",
+      "nextId": "q_c_done"
+    },
+    "q_c_fb": {
+      "id": "q_c_fb",
+      "type": "free",
+      "titleRes": "q_c_fb_title",
+      "nextId": "q_c_done"
+    },
+    "q_c_done": {
+      "id": "q_c_done",
+      "type": "return",
+      "titleRes": "done_c",
+      "returnTo": "q_hub_main"
+    },
+    "q_d1": {
+      "id": "q_d1",
+      "type": "single_branch",
+      "titleRes": "q_d1_title",
+      "options": [
+        { "key": "photo", "labelRes": "photo", "nextId": "q_d_photo" },
+        { "key": "note",  "labelRes": "note",  "nextId": "q_d_note" },
+        { "key": "skip",  "labelRes": "skip" }
+      ],
+      "fallbackNextId": "q_d_skip_free"
+    },
+    "q_d_photo": {
+      "id": "q_d_photo",
+      "type": "video",
+      "titleRes": "q_d_photo_title",
+      "nextId": "q_d_done"
+    },
+    "q_d_note": {
+      "id": "q_d_note",
+      "type": "voice",
+      "titleRes": "q_d_note_title",
+      "nextId": "q_d_done"
+    },
+    "q_d_skip_free": {
+      "id": "q_d_skip_free",
+      "type": "free",
+      "titleRes": "q_d_skip_free_title",
+      "nextId": "q_d_done"
+    },
+    "q_d_done": {
+      "id": "q_d_done",
+      "type": "return",
+      "titleRes": "done_d",
+      "returnTo": "q_hub_main"
+    },
+    "q_hub2": {
+      "id": "q_hub2",
+      "type": "multi_hub",
+      "titleRes": "q_hub2_title",
+      "order": "sequential",
+      "entries": [
+        { "key": "E", "labelRes": "hubE", "startId": "q_e1" },
+        { "key": "F", "labelRes": "hubF", "startId": "q_f1" }
+      ],
+      "afterAllNextId": "q_review_main"
+    },
+    "q_e1": {
+      "id": "q_e1",
+      "type": "yesno",
+      "titleRes": "q_e1_title",
+      "nextIdIfYes": "q_e2",
+      "nextIdIfNo": "q_e_done"
+    },
+    "q_e2": {
+      "id": "q_e2",
+      "type": "free",
+      "titleRes": "q_e2_title",
+      "nextId": "q_e_done"
+    },
+    "q_e_done": {
+      "id": "q_e_done",
+      "type": "return",
+      "titleRes": "done_e",
+      "returnTo": "q_hub2"
+    },
+    "q_f1": {
+      "id": "q_f1",
+      "type": "single",
+      "titleRes": "q_f1_title",
+      "options": [
+        { "key": "x", "labelRes": "opt_x", "nextId": "q_f2" },
+        { "key": "y", "labelRes": "opt_y" }
+      ],
+      "nextId": "q_f_fb"
+    },
+    "q_f2": {
+      "id": "q_f2",
+      "type": "free",
+      "titleRes": "q_f2_title",
+      "nextId": "q_f_done"
+    },
+    "q_f_fb": {
+      "id": "q_f_fb",
+      "type": "free",
+      "titleRes": "q_f_fb_title",
+      "nextId": "q_f_done"
+    },
+    "q_f_done": {
+      "id": "q_f_done",
+      "type": "return",
+      "titleRes": "done_f",
+      "returnTo": "q_hub2"
+    },
+    "q_review_main": {
+      "id": "q_review_main",
+      "type": "single",
+      "titleRes": "q_review_main_title",
+      "options": [
+        { "key": "accept", "labelRes": "accept", "nextId": "q_submit" },
+        { "key": "edit",   "labelRes": "edit",   "nextId": "q_edit_branch" }
+      ],
+      "nextId": "q_submit"
+    },
+    "q_edit_branch": {
+      "id": "q_edit_branch",
+      "type": "single_branch",
+      "titleRes": "q_edit_branch_title",
+      "options": [
+        { "key": "main",  "labelRes": "main",  "nextId": "q_edit_return_main" },
+        { "key": "extra", "labelRes": "extra", "nextId": "q_edit_return_extra" },
+        { "key": "other", "labelRes": "other" }
+      ],
+      "fallbackNextId": "q_edit_return_review"
+    },
+    "q_edit_return_main": {
+      "id": "q_edit_return_main",
+      "type": "return",
+      "titleRes": "back_to_hub_main",
+      "returnTo": "q_hub_main"
+    },
+    "q_edit_return_extra": {
+      "id": "q_edit_return_extra",
+      "type": "return",
+      "titleRes": "back_to_hub2",
+      "returnTo": "q_hub2"
+    },
+    "q_edit_return_review": {
+      "id": "q_edit_return_review",
+      "type": "return",
+      "titleRes": "back_to_review",
+      "returnTo": "q_review_main"
+    },
+    "q_submit": {
+      "id": "q_submit",
+      "type": "free",
+      "titleRes": "q_submit_title",
+      "nextId": "q_end"
+    },
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "titleRes": "thank_you"
+    },
+    "q_end_early": {
+      "id": "q_end_early",
+      "type": "end",
+      "titleRes": "goodbye"
+    }
+  }
+}

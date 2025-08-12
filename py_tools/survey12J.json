@@ -1,0 +1,86 @@
+{
+  "version": "v1",
+  "startId": "q1",
+  "endId": "q_end",
+  "questions": {
+    "q1": {
+      "id": "q1",
+      "type": "yesno",
+      "title": "本サービスの利用経験はありますか？",
+      "yesLabel": "ある",
+      "noLabel": "ない",
+      "nextIdIfYes": "q2",
+      "nextIdIfNo": "q3"
+    },
+
+    "q2": {
+      "id": "q2",
+      "type": "single",
+      "title": "直近3か月の利用頻度を教えてください",
+      "options": [
+        { "key": "daily", "label": "ほぼ毎日" },
+        { "key": "weekly", "label": "週に数回" },
+        { "key": "monthly", "label": "月に数回" },
+        { "key": "first", "label": "今回が初めて" }
+      ],
+      "nextId": "q3"
+    },
+
+    "q3": {
+      "id": "q3",
+      "type": "single",
+      "title": "本日の総合満足度を教えてください（5=とても満足〜1=不満）",
+      "options": [
+        { "key": "5", "label": "5 とても満足" },
+        { "key": "4", "label": "4 満足" },
+        { "key": "3", "label": "3 ふつう" },
+        { "key": "2", "label": "2 やや不満" },
+        { "key": "1", "label": "1 不満" }
+      ],
+      "nextId": "q4"
+    },
+
+    "q4": {
+      "id": "q4",
+      "type": "free",
+      "title": "良かった点を1つ教えてください（任意）",
+      "nextId": "q5"
+    },
+
+    "q5": {
+      "id": "q5",
+      "type": "single",
+      "title": "今後もっと重視してほしい点はどれですか？",
+      "options": [
+        { "key": "speed", "label": "処理速度" },
+        { "key": "ui", "label": "使いやすさ" },
+        { "key": "price", "label": "価格" },
+        { "key": "support", "label": "サポート" }
+      ],
+      "nextId": "q6"
+    },
+
+    "q6": {
+      "id": "q6",
+      "type": "yesno",
+      "title": "このサービスを今後も利用したいと思いますか？",
+      "yesLabel": "はい",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q7",
+      "nextIdIfNo": "q7"
+    },
+
+    "q7": {
+      "id": "q7",
+      "type": "free",
+      "title": "最後に一言（ご意見・ご要望など）",
+      "nextId": "q_end"
+    },
+
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "title": "ご協力ありがとうございました！"
+    }
+  }
+}

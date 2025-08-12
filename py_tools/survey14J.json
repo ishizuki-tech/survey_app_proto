@@ -1,0 +1,209 @@
+{
+  "version": "v1",
+  "startId": "q1",
+  "endId": "q_end",
+  "questions": {
+    "q1": {
+      "id": "q1",
+      "type": "yesno",
+      "title": "本調査への参加に同意しますか？（所要5〜7分）",
+      "yesLabel": "同意する",
+      "noLabel": "同意しない",
+      "nextIdIfYes": "q_intro_video",
+      "nextIdIfNo": "q_exit_reason"
+    },
+
+    "q_intro_video": {
+      "id": "q_intro_video",
+      "type": "video",
+      "title": "本調査の概要説明（1分動画）をご覧ください",
+      "nextId": "q_use_case"
+    },
+
+    "q_exit_reason": {
+      "id": "q_exit_reason",
+      "type": "free",
+      "title": "辞退の理由があればご記入ください（任意）",
+      "nextId": "q_end"
+    },
+
+    "q_use_case": {
+      "id": "q_use_case",
+      "type": "single",
+      "title": "本サービスの主な利用目的はどれに近いですか？",
+      "options": [
+        { "key": "work", "label": "業務" },
+        { "key": "study", "label": "学習" },
+        { "key": "personal", "label": "個人" }
+      ],
+      "nextId": "q_pref_branch"
+    },
+
+    "q_pref_branch": {
+      "id": "q_pref_branch",
+      "type": "single_branch",
+      "title": "最も重視する点を1つ選んでください",
+      "options": [
+        { "key": "speed", "label": "処理速度", "nextId": "q_free_speed" },
+        { "key": "price", "label": "価格", "nextId": "q_free_price" }
+      ],
+      "fallbackNextId": "q_free_other"
+    },
+
+    "q_free_speed": {
+      "id": "q_free_speed",
+      "type": "free",
+      "title": "処理速度で気になる点（任意）",
+      "nextId": "q_voice_opinion"
+    },
+    "q_free_price": {
+      "id": "q_free_price",
+      "type": "free",
+      "title": "価格面でのご意見（任意）",
+      "nextId": "q_voice_opinion"
+    },
+    "q_free_other": {
+      "id": "q_free_other",
+      "type": "free",
+      "title": "その他で重視する点（任意）",
+      "nextId": "q_voice_opinion"
+    },
+
+    "q_voice_opinion": {
+      "id": "q_voice_opinion",
+      "type": "voice",
+      "title": "ご自由にご意見を音声でお話しください（任意）",
+      "nextId": "q_feature_hub"
+    },
+
+    "q_feature_hub": {
+      "id": "q_feature_hub",
+      "type": "multi_hub",
+      "title": "機能A/B/Cについて、順不同で確認してください（全て終了後に次へ）",
+      "order": "any",
+      "entries": [
+        { "key": "A", "label": "機能A", "startId": "q_a1" },
+        { "key": "B", "label": "機能B", "startId": "q_b1" },
+        { "key": "C", "label": "機能C", "startId": "q_c1" }
+      ],
+      "afterAllNextId": "q_review"
+    },
+
+    "q_a1": {
+      "id": "q_a1",
+      "type": "single",
+      "title": "機能Aの使いやすさ評価",
+      "options": [
+        { "key": "5", "label": "5 とても良い" },
+        { "key": "4", "label": "4 良い" },
+        { "key": "3", "label": "3 ふつう" },
+        { "key": "2", "label": "2 悪い" },
+        { "key": "1", "label": "1 とても悪い" }
+      ],
+      "nextId": "q_a_note"
+    },
+    "q_a_note": {
+      "id": "q_a_note",
+      "type": "free",
+      "title": "機能Aについて補足があれば（任意）",
+      "nextId": "q_a_done"
+    },
+    "q_a_done": {
+      "id": "q_a_done",
+      "type": "return",
+      "title": "機能Aの確認を終了してハブに戻ります",
+      "returnTo": "q_feature_hub"
+    },
+
+    "q_b1": {
+      "id": "q_b1",
+      "type": "single_branch",
+      "title": "機能Bで最も重要なのは？",
+      "options": [
+        { "key": "reliability", "label": "信頼性", "nextId": "q_b_free_rel" },
+        { "key": "ux", "label": "UI/UX", "nextId": "q_b_free_ux" }
+      ],
+      "fallbackNextId": "q_b_free_other"
+    },
+    "q_b_free_rel": {
+      "id": "q_b_free_rel",
+      "type": "free",
+      "title": "機能Bの信頼性について（任意）",
+      "nextId": "q_b_done"
+    },
+    "q_b_free_ux": {
+      "id": "q_b_free_ux",
+      "type": "free",
+      "title": "機能BのUI/UXについて（任意）",
+      "nextId": "q_b_done"
+    },
+    "q_b_free_other": {
+      "id": "q_b_free_other",
+      "type": "free",
+      "title": "機能Bで他に重要な点（任意）",
+      "nextId": "q_b_done"
+    },
+    "q_b_done": {
+      "id": "q_b_done",
+      "type": "return",
+      "title": "機能Bの確認を終了してハブに戻ります",
+      "returnTo": "q_feature_hub"
+    },
+
+    "q_c1": {
+      "id": "q_c1",
+      "type": "free",
+      "title": "機能Cの改善提案があれば（任意）",
+      "nextId": "q_c_done"
+    },
+    "q_c_done": {
+      "id": "q_c_done",
+      "type": "return",
+      "title": "機能Cの確認を終了してハブに戻ります",
+      "returnTo": "q_feature_hub"
+    },
+
+    "q_review": {
+      "id": "q_review",
+      "type": "single",
+      "title": "本日の総合満足度（5=とても満足〜1=不満）",
+      "options": [
+        { "key": "5", "label": "5 とても満足" },
+        { "key": "4", "label": "4 満足" },
+        { "key": "3", "label": "3 ふつう" },
+        { "key": "2", "label": "2 やや不満" },
+        { "key": "1", "label": "1 不満" }
+      ],
+      "nextId": "q_followup"
+    },
+
+    "q_followup": {
+      "id": "q_followup",
+      "type": "yesno",
+      "title": "結果共有や追加質問のために連絡してもよいですか？",
+      "yesLabel": "はい（連絡先を入力）",
+      "noLabel": "いいえ",
+      "nextIdIfYes": "q_contact",
+      "nextIdIfNo": "q_end_msg"
+    },
+    "q_contact": {
+      "id": "q_contact",
+      "type": "free",
+      "title": "ご連絡先（メール/電話など、任意）",
+      "nextId": "q_end_msg"
+    },
+
+    "q_end_msg": {
+      "id": "q_end_msg",
+      "type": "free",
+      "title": "ご協力ありがとうございました！最後に一言（任意）",
+      "nextId": "q_end"
+    },
+
+    "q_end": {
+      "id": "q_end",
+      "type": "end",
+      "title": "終了"
+    }
+  }
+}
